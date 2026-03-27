@@ -132,24 +132,17 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Map placeholder */}
-          <div className="h-[200px] bg-gradient-to-br from-[#F0F0F0] to-[#E8E8E8] relative flex items-center justify-center border-t border-[var(--color-border)]">
-            <span className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-[0.08em]">
-              Surat · Gujarat · India
-            </span>
-            {[
-              { top: "35%", left: "28%" },
-              { top: "55%", left: "52%" },
-              { top: "30%", left: "68%" },
-              { top: "72%", left: "38%" },
-              { top: "50%", left: "80%" },
-            ].map((pos, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-[var(--color-blue)] rounded-full shadow-[0_0_0_4px_rgba(37,99,235,0.15)]"
-                style={pos}
-              />
-            ))}
+          {/* Google Map */}
+          <div className="h-[280px] border-t border-[var(--color-border)] overflow-hidden">
+            <iframe
+              title="Shreeji HVAC location"
+              src="https://maps.google.com/maps?q=Shreeji%20HVAC%2FR%20Trading%20LLP&z=15&hl=en&t=m&output=embed&iwloc=near"
+              width="100%"
+              height="100%"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full border-0"
+            />
           </div>
         </div>
       </div>

@@ -122,30 +122,18 @@ export default function Portfolio() {
               />
 
               {/* Base gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-              {/* Accent tint on hover */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 mix-blend-screen"
-                style={{ background: p.accent }}
-              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
 
               {/* Category chip — top left */}
               <div className="absolute top-4 left-4">
-                <span
-                  className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-sm border"
-                  style={{
-                    color: p.accent,
-                    background: `${p.accent}20`,
-                    borderColor: `${p.accent}30`,
-                  }}
-                >
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold backdrop-blur-sm
+                  bg-white/15 border border-white/25 text-white">
                   {p.category}
                 </span>
               </div>
 
               {/* Year — top right */}
-              <span className="absolute top-4 right-4 text-[11px] font-semibold text-white/50">
+              <span className="absolute top-4 right-4 text-[11px] font-semibold text-white/40">
                 {p.year}
               </span>
 
@@ -156,12 +144,6 @@ export default function Portfolio() {
                   {p.title}
                 </h3>
               </div>
-
-              {/* Accent bottom bar on hover */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-                style={{ background: p.accent }}
-              />
             </div>
           ))}
         </div>

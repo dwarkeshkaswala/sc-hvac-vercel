@@ -63,7 +63,7 @@ export default function Hero() {
               </svg>
             </Link>
             <a
-              href="tel:+919876543210"
+              href="tel:+919054190245"
               className="inline-flex items-center gap-2 h-12 px-6 rounded-full
                          bg-[var(--color-surface)] text-[var(--color-text-primary)] text-[13.5px] font-semibold
                          border border-[var(--color-border)]
@@ -73,7 +73,21 @@ export default function Hero() {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              +91 98765 43210
+              +91 90541 90245
+            </a>
+            <a
+              href="https://wa.me/919054190245?text=Hi%2C%20I%27m%20interested%20in%20Shreeji%20HVAC%20services"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 h-12 px-6 rounded-full
+                         bg-[#25D366] text-white text-[13.5px] font-semibold
+                         transition-all duration-300 ease-[var(--ease)]
+                         hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(37,211,102,0.4)]"
+            >
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16 0C7.164 0 0 7.163 0 16c0 2.822.737 5.469 2.027 7.77L0 32l8.469-2.002A15.93 15.93 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 0 1-6.771-1.854l-.486-.289-4.99 1.18 1.243-4.836-.317-.497A13.26 13.26 0 0 1 2.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.274-9.878c-.398-.199-2.355-1.162-2.72-1.295-.366-.133-.632-.199-.898.2-.265.398-1.029 1.295-1.261 1.561-.232.265-.465.298-.863.1-.398-.2-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.812.179-.178.398-.465.597-.698.2-.232.266-.398.399-.664.133-.265.066-.497-.033-.697-.1-.199-.898-2.165-1.23-2.963-.325-.778-.655-.672-.898-.685l-.765-.013c-.266 0-.697.1-1.063.497-.365.398-1.394 1.362-1.394 3.321 0 1.96 1.427 3.854 1.626 4.12.2.265 2.807 4.286 6.803 6.01.95.41 1.692.655 2.27.839.954.304 1.822.261 2.508.158.765-.114 2.355-.963 2.688-1.893.332-.93.332-1.727.232-1.893-.1-.166-.365-.265-.763-.464z"/>
+              </svg>
+              WhatsApp Us
             </a>
           </div>
 
@@ -177,17 +191,6 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Second smaller image — offset card */}
-          <div className="absolute -bottom-5 -left-10 w-[180px] h-[130px] rounded-[18px] overflow-hidden
-                          border-4 border-[var(--color-bg)] shadow-[0_12px_40px_rgba(0,0,0,0.14)]">
-            <Image
-              src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=75"
-              alt="HVAC Technician"
-              fill
-              sizes="180px"
-              className="object-cover"
-            />
-          </div>
         </div>
       </div>
 

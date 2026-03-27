@@ -104,14 +104,10 @@ export default function Products() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 ease-[var(--ease)] group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                <div
-                  className="absolute inset-0 opacity-25 mix-blend-multiply"
-                  style={{ background: `linear-gradient(135deg, ${p.accent}90, transparent 65%)` }}
-                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
                 {/* Number badge */}
-                <span className="absolute top-4 right-4 font-[var(--font-display)] text-[11px] font-bold text-white/50 tracking-[0.05em]">
+                <span className="absolute top-4 right-4 font-[var(--font-display)] text-[11px] font-bold text-white/40 tracking-[0.05em]">
                   {p.id}
                 </span>
 
@@ -121,12 +117,6 @@ export default function Products() {
                     {p.title}
                   </h3>
                 </div>
-
-                {/* Accent bar */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 h-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-                  style={{ background: p.accent }}
-                />
               </div>
 
               {/* Content */}
@@ -140,12 +130,8 @@ export default function Products() {
                   {p.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-2.5 py-1 rounded-full text-[11.5px] font-medium border"
-                      style={{
-                        color: p.accent,
-                        background: `${p.accent}0D`,
-                        borderColor: `${p.accent}20`,
-                      }}
+                      className="inline-flex items-center px-2.5 py-1 rounded-full text-[11.5px] font-medium
+                        text-[var(--color-text-secondary)] bg-[var(--color-surface-raised)] border border-[var(--color-border)]"
                     >
                       {tag}
                     </span>
