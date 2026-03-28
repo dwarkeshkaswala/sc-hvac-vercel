@@ -2,78 +2,23 @@
 
 import { useRef } from "react";
 import { useInView } from "@/hooks/useInView";
+import type { TrustContent } from "@/lib/content";
+import { defaultTrust } from "@/lib/content";
 
-const stats = [
-  { value: "15+",  label: "Years in business" },
-  { value: "500+", label: "Projects delivered" },
-  { value: "98%",  label: "Client retention" },
-  { value: "< 2h", label: "Emergency response" },
+/* Pillar icons — ordered by pillar index (cycles if more pillars added) */
+const PILLAR_ICONS = [
+  <svg key="0" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>,
+  <svg key="1" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
+  <svg key="2" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>,
+  <svg key="3" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>,
+  <svg key="4" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  <svg key="5" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
 ];
 
-const pillars = [
-  {
-    num: "01",
-    title: "Certified Engineers",
-    desc: "Every technician holds manufacturer certifications from Daikin, Carrier, and Voltas — not just general HVAC training.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
-      </svg>
-    ),
-  },
-  {
-    num: "02",
-    title: "30% Energy Savings",
-    desc: "Design-first engineering consistently delivers 25–35% reduction in power consumption vs conventional installations.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
-      </svg>
-    ),
-  },
-  {
-    num: "03",
-    title: "End-to-End Ownership",
-    desc: "From site survey and system design to installation, commissioning, and long-term AMC — one team, full accountability.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-      </svg>
-    ),
-  },
-  {
-    num: "04",
-    title: "50+ Brand Expertise",
-    desc: "Carrier, Daikin, Voltas, Bluestar, Hitachi, Mitsubishi and more — install, service, and spares across all major brands.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/>
-      </svg>
-    ),
-  },
-  {
-    num: "05",
-    title: "24/7 Emergency Support",
-    desc: "Climate failures don't wait for office hours. Our rapid-response team is on call round the clock, reaching you in under 2 hours.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-      </svg>
-    ),
-  },
-  {
-    num: "06",
-    title: "Transparent Pricing",
-    desc: "Detailed line-item quotes, zero hidden fees. You know exactly what you're paying for before we start work.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-      </svg>
-    ),
-  },
-];
-
-export default function Trust() {
+export default function Trust({ data }: { data?: TrustContent }) {
+  const d = data ?? defaultTrust;
+  const stats = d.stats;
+  const pillars = d.pillars;
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, 0.05);
 
@@ -145,7 +90,7 @@ export default function Trust() {
                   <div className="w-10 h-10 rounded-[10px] bg-[var(--color-surface-raised)] border border-[var(--color-border)]
                     flex items-center justify-center mb-4 text-[var(--color-text-secondary)]
                     transition-all duration-300 group-hover:bg-[#111111] group-hover:text-white group-hover:border-transparent">
-                    {p.icon}
+                    {PILLAR_ICONS[pillars.indexOf(p) % PILLAR_ICONS.length]}
                   </div>
                   <h3 className="font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text-primary)] tracking-[-0.015em] mb-1.5">
                     {p.title}

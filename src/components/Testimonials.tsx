@@ -3,69 +3,8 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
-
-const testimonials = [
-  {
-    name: "Rajesh Mehta",
-    role: "Facility Manager",
-    company: "Surat Diamond Bourse",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=128&q=75",
-    accent: "#2563EB",
-    rating: 5,
-    quote:
-      "Shreeji HVAC handled our 480 TR VRF installation across 4 floors seamlessly. Zero downtime since commissioning — truly professional end-to-end execution.",
-  },
-  {
-    name: "Priya Shah",
-    role: "Director of Operations",
-    company: "Lotus Multispecialty Hospital",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=128&q=75",
-    accent: "#16A34A",
-    rating: 5,
-    quote:
-      "Critical environment, zero room for error. Their HEPA-integrated HVAC system meets all NABH standards and their AMC team responds within 2 hours every time.",
-  },
-  {
-    name: "Vikram Patel",
-    role: "CEO",
-    company: "Patel Cold Chain Logistics",
-    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=128&q=75",
-    accent: "#EC4899",
-    rating: 5,
-    quote:
-      "Six cold chambers, 18 months of flawless operation. Their cold storage expertise and energy-efficient design cut our electricity bills by 22% compared to the previous vendor.",
-  },
-  {
-    name: "Nisha Agarwal",
-    role: "Project Head",
-    company: "Greenfield IT Campus",
-    photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=128&q=75",
-    accent: "#8B5CF6",
-    rating: 5,
-    quote:
-      "The chiller plant project was delivered 3 weeks ahead of schedule. Their engineering team's attention to load calculation and BMS integration was top-notch.",
-  },
-  {
-    name: "Suresh Joshi",
-    role: "Plant Manager",
-    company: "Surat Textile Mill",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=128&q=75",
-    accent: "#F59E0B",
-    rating: 5,
-    quote:
-      "We've been on their AMC plan for 4 years. The team is responsive, thorough, and proactive — our production lines have never had an HVAC-related stoppage.",
-  },
-  {
-    name: "Manav Desai",
-    role: "Owner",
-    company: "Adajan Luxury Residency",
-    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=128&q=75",
-    accent: "#0EA5E9",
-    rating: 5,
-    quote:
-      "From design to handover in 6 weeks — exactly as promised. Every apartment's system is whisper-quiet. Residents absolutely love it. Would recommend without hesitation.",
-  },
-];
+import type { TestimonialItem } from "@/lib/content";
+import { defaultTestimonials } from "@/lib/content";
 
 function StarIcon() {
   return (
@@ -75,12 +14,13 @@ function StarIcon() {
   );
 }
 
-export default function Testimonials() {
+export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
+  const testimonials = data ?? defaultTestimonials;
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, 0.05);
   const [active, setActive] = useState(0);
 
-  const featured = testimonials[active];
+  const featured = testimonials[Math.min(active, testimonials.length - 1)] ?? testimonials[0];
 
   return (
     <section id="testimonials" ref={ref} className="py-24 bg-[var(--color-surface-raised)]">

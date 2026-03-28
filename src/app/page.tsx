@@ -9,21 +9,36 @@ import Trust from "@/components/Trust";
 import Brands from "@/components/Brands";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import {
+  getHeroContent,
+  getServicesContent,
+  getTestimonialsContent,
+  getTrustContent,
+  getContactContent,
+} from "@/lib/content";
 
-export default function Home() {
+export default async function Home() {
+  const [hero, services, testimonials, trust, contact] = await Promise.all([
+    getHeroContent(),
+    getServicesContent(),
+    getTestimonialsContent(),
+    getTrustContent(),
+    getContactContent(),
+  ]);
+
   return (
     <>
       <Navbar />
       <main>
-        <Hero />
-        <Services />
+        <Hero data={hero} />
+        <Services data={services} />
         <Products />
         <Portfolio />
-        <Testimonials />
+        <Testimonials data={testimonials} />
         <Blog />
-        <Trust />
+        <Trust data={trust} />
         <Brands />
-        <Contact />
+        <Contact data={contact} />
       </main>
       <Footer />
 

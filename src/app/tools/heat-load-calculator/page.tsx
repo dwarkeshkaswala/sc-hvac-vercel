@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, type ReactNode } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -60,16 +60,30 @@ const ORIENTATION_FACTOR: Record<string, number> = {
   "North-West": 0.70,
 };
 
-const SPACE_TYPES: Record<string, { people: number; lights: number; equip: number; ventCfm: number; label: string; icon: string }> = {
-  office:     { people: 10, lights: 12,  equip: 15,  ventCfm: 20, label: "Office", icon: "💼" },
-  retail:     { people: 7,  lights: 18,  equip: 5,   ventCfm: 15, label: "Retail", icon: "🏪" },
-  restaurant: { people: 7,  lights: 14,  equip: 30,  ventCfm: 20, label: "Restaurant", icon: "🍽️" },
-  hospital:   { people: 10, lights: 15,  equip: 20,  ventCfm: 25, label: "Hospital", icon: "🏥" },
-  hotel:      { people: 25, lights: 10,  equip: 5,   ventCfm: 15, label: "Hotel", icon: "🏨" },
-  server:     { people: 30, lights: 10,  equip: 200, ventCfm: 20, label: "Server Room", icon: "🖥️" },
-  warehouse:  { people: 50, lights: 8,   equip: 5,   ventCfm: 10, label: "Warehouse", icon: "🏭" },
-  residential:{ people: 15, lights: 8,   equip: 8,   ventCfm: 15, label: "Home", icon: "🏠" },
-  custom:     { people: 10, lights: 12,  equip: 15,  ventCfm: 20, label: "Custom", icon: "⚙️" },
+/* Lucide-style SVG icon helper */
+const _ic = (w: number, c: ReactNode) => (
+  <svg width={w} height={w} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">{c}</svg>
+);
+
+const SPACE_TYPES: Record<string, { people: number; lights: number; equip: number; ventCfm: number; label: string; icon: ReactNode }> = {
+  office:      { people: 10, lights: 12,  equip: 15,  ventCfm: 20, label: "Office",
+    icon: _ic(22, <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></>) },
+  retail:      { people: 7,  lights: 18,  equip: 5,   ventCfm: 15, label: "Retail",
+    icon: _ic(22, <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></>) },
+  restaurant:  { people: 7,  lights: 14,  equip: 30,  ventCfm: 20, label: "Restaurant",
+    icon: _ic(22, <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></>) },
+  hospital:    { people: 10, lights: 15,  equip: 20,  ventCfm: 25, label: "Hospital",
+    icon: _ic(22, <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>) },
+  hotel:       { people: 25, lights: 10,  equip: 5,   ventCfm: 15, label: "Hotel",
+    icon: _ic(22, <><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></>) },
+  server:      { people: 30, lights: 10,  equip: 200, ventCfm: 20, label: "Server Room",
+    icon: _ic(22, <><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01"/><path d="M6 18h.01"/></>) },
+  warehouse:   { people: 50, lights: 8,   equip: 5,   ventCfm: 10, label: "Warehouse",
+    icon: _ic(22, <><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 2 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 22 16V8z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></>) },
+  residential: { people: 15, lights: 8,   equip: 8,   ventCfm: 15, label: "Home",
+    icon: _ic(22, <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></>) },
+  custom:      { people: 10, lights: 12,  equip: 15,  ventCfm: 20, label: "Custom",
+    icon: _ic(22, <path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M2 14h4m4-6h4m4 8h4"/>) },
 };
 
 // Solar radiation on glass (peak, W/m² for India latitudes)
@@ -286,12 +300,12 @@ function DonutChart({ segments, size = 160 }: {
 }
 
 /* ── Step config ── */
-const STEPS = [
-  { id: 0, label: "Space", icon: "📍" },
-  { id: 1, label: "Dimensions", icon: "📐" },
-  { id: 2, label: "Envelope", icon: "🏗️" },
-  { id: 3, label: "Loads", icon: "⚡" },
-] as const;
+const STEPS: { id: number; label: string; icon: ReactNode }[] = [
+  { id: 0, label: "Space",      icon: _ic(16, <><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></>) },
+  { id: 1, label: "Dimensions", icon: _ic(16, <><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></>) },
+  { id: 2, label: "Envelope",   icon: _ic(16, <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></>) },
+  { id: 3, label: "Loads",      icon: _ic(16, <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>) },
+];
 
 /* ── Page ──────────────────────────────────────────────────── */
 
@@ -384,7 +398,7 @@ export default function HeatLoadPage() {
                     : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-raised)]"
                   }`}
               >
-                <span className="text-[15px]">{s.icon}</span>
+                {s.icon}
                 <span className="hidden sm:inline">{s.label}</span>
               </button>
             ))}
@@ -413,7 +427,7 @@ export default function HeatLoadPage() {
                             : "bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-raised)]"
                           }`}
                       >
-                        <span className="text-[22px]">{val.icon}</span>
+                        {val.icon}
                         <span className="text-[11.5px] font-semibold">{val.label}</span>
                       </button>
                     ))}

@@ -3,69 +3,18 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
-
-/* ─── Data ────────────────────────────────────── */
-
-const services = [
-  {
-    id: "01",
-    title: "Installation & Projects",
-    desc: "End-to-end HVAC system design, engineering, and installation for commercial towers, factories, hospitals, and large residential complexes.",
-    items: ["VRF / VRV systems", "Central AC plants", "Chiller & AHU units", "Project management"],
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "02",
-    title: "Repair & Diagnostics",
-    desc: "Rapid breakdown response with expert diagnostics covering all major HVAC brands. Our certified engineers reach you within 2 hours.",
-    items: ["Emergency callout", "Compressor & PCB repair", "Gas leak detection", "Root cause analysis"],
-    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "03",
-    title: "Annual Maintenance",
-    desc: "Structured AMC plans ensuring maximum equipment longevity, peak efficiency, and zero unplanned downtime across your facilities.",
-    items: ["Scheduled service visits", "Filter & coil deep clean", "Performance reporting", "Priority response SLA"],
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "04",
-    title: "Consultancy & Audit",
-    desc: "Expert technical guidance on system sizing, energy efficiency optimisation, and regulatory compliance — before you build or renovate.",
-    items: ["Load calculation", "Energy audit & savings report", "Design review", "Compliance advisory"],
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "05",
-    title: "Ducting Systems",
-    desc: "Custom GI duct fabrication, precision installation, and insulation for optimal airflow distribution across every zone.",
-    items: ["GI duct fabrication", "Flexible duct routing", "Insulation wrapping", "Airflow balancing"],
-    image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "06",
-    title: "Parts & Supply",
-    desc: "Genuine OEM spare parts and components for Carrier, Daikin, Voltas, Bluestar and 40+ other brands — sourced and delivered fast.",
-    items: ["OEM spare parts", "Filters & coils", "Controls & sensors", "Same-day dispatch"],
-    image: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "07",
-    title: "Copper Piping",
-    desc: "Professional copper piping runs with silver brazing, nitrogen flushing, and full pressure testing to guarantee leak-free systems.",
-    items: ["Copper pipe runs", "Silver brazing", "Nitrogen flushing", "Pressure testing"],
-    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80",
-  },
-];
+import type { ServiceItem } from "@/lib/content";
+import { defaultServices } from "@/lib/content";
 
 /* ─── Component ───────────────────────────────── */
 
-export default function Services() {
+export default function Services({ data }: { data?: ServiceItem[] }) {
+  const services = data ?? defaultServices;
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, 0.05);
   const [active, setActive] = useState(0);
 
-  const s = services[active];
+  const s = services[Math.min(active, services.length - 1)] ?? services[0];
 
   return (
     <section id="services" ref={ref} className="py-24 bg-[var(--color-bg)]">

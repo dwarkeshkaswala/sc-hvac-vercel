@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { posts, getPostBySlug, type ContentBlock } from "@/lib/blog";
+import type { ContentBlock } from "@/lib/blog";
+import { getBlogPosts, getBlogPost } from "@/lib/content";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -11,12 +12,13 @@ interface Props {
 }
 
 export async function generateStaticParams() {
+  const posts = await getBlogPosts();
   return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getBlogPost(slug);
   if (!post) return {};
   return {
     title: `${post.title} — Shreeji HVAC Blog`,
@@ -93,10 +95,11 @@ function renderBlock(block: ContentBlock, i: number) {
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getBlogPost(slug);
   if (!post) notFound();
 
-  const related = posts.filter((p) => p.slug !== slug).slice(0, 2);
+  const allPosts = await getBlogPosts();
+  const related = allPosts.filter((p) => p.slug !== slug).slice(0, 2);
 
   return (
     <>

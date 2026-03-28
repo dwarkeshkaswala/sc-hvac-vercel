@@ -2,13 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-
-const stats = [
-  { value: "500+", label: "Projects Delivered" },
-  { value: "15+",  label: "Years in Gujarat" },
-  { value: "24/7", label: "Emergency Support" },
-  { value: "30%",  label: "Avg. Energy Savings" },
-];
+import type { HeroContent } from "@/lib/content";
+import { defaultHero } from "@/lib/content";
 
 const avatars = [
   { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&q=75", alt: "Rajesh M." },
@@ -18,10 +13,11 @@ const avatars = [
   { src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=64&q=75", alt: "Suresh J." },
 ];
 
-export default function Hero() {
+export default function Hero({ data }: { data?: HeroContent }) {
+  const d = data ?? defaultHero;
+  const stats = d.stats;
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden bg-[var(--color-bg)]">
-
       {/* ── Main content ─────────────────────────────── */}
       <div className="flex-1 max-w-[1200px] w-full mx-auto px-6 pt-[120px] pb-10
                       grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-10 items-center">
@@ -37,23 +33,22 @@ export default function Hero() {
               <span className="absolute inset-0 rounded-full bg-[var(--color-green)] animate-[ping_2s_ease-out_infinite] opacity-60" />
               <span className="relative w-2 h-2 rounded-full bg-[var(--color-green)]" />
             </span>
-            Surat&apos;s most trusted HVAC partner
+            {d.badge}
           </div>
 
           {/* Headline */}
           <h1 className="font-[var(--font-display)] font-extrabold leading-[1.0] tracking-[-0.035em]
                          text-[clamp(42px,6vw,76px)] mb-6 animate-fade-up delay-1">
-            Precision
+            {d.line1}
             <br />
-            <span className="text-[var(--color-text-tertiary)]">climate</span>
+            <span className="text-[var(--color-text-tertiary)]">{d.line2}</span>
             <br />
-            engineering.
+            {d.line3}
           </h1>
 
           {/* Sub */}
           <p className="text-[15px] text-[var(--color-text-secondary)] leading-[1.75] max-w-[420px] mb-10 animate-fade-up delay-2">
-            End-to-end HVAC design, installation &amp; maintenance for commercial
-            towers, factories, hospitals and cold chains across Gujarat — delivered by certified engineers.
+            {d.subheadline}
           </p>
 
           {/* CTAs */}
@@ -71,7 +66,7 @@ export default function Hero() {
               </svg>
             </Link>
             <a
-              href="tel:+919054190245"
+              href={`tel:${d.phone.replace(/\s/g, "")}`}
               className="inline-flex items-center gap-2 h-12 px-6 rounded-full
                          bg-[var(--color-surface)] text-[var(--color-text-primary)] text-[13.5px] font-semibold
                          border border-[var(--color-border)]
@@ -81,7 +76,7 @@ export default function Hero() {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              +91 90541 90245
+              {d.phone}
             </a>
             <a
               href="https://wa.me/919054190245?text=Hi%2C%20I%27m%20interested%20in%20Shreeji%20HVAC%20services"

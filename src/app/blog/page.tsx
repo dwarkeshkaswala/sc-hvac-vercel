@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { posts } from "@/lib/blog";
+import { getBlogPosts } from "@/lib/content";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -18,7 +18,8 @@ const tagColors: Record<string, string> = {
   Industry: "bg-violet-50 text-violet-700",
 };
 
-export default function BlogListPage() {
+export default async function BlogListPage() {
+  const posts = await getBlogPosts();
   const [featured, ...rest] = posts;
 
   return (

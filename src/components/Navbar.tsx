@@ -29,11 +29,11 @@ export default function Navbar() {
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-1">
           {[
+            { label: "Home", href: "/" },
             { label: "Services", href: "/#services" },
-            { label: "Why Us", href: "/#why-us" },
             { label: "Blog", href: "/blog" },
+            { label: "Why Us", href: "/#why-us" },
             { label: "Calculator", href: "/tools/heat-load-calculator" },
-            { label: "Contact", href: "/#contact" },
           ].map(({ label, href }) => (
             <Link
               key={label}
