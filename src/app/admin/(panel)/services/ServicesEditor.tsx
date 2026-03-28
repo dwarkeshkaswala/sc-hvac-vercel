@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ServiceItem } from "@/lib/content";
-import { saveServicesAction } from "../actions";
+import { saveServicesAction } from "@/app/admin/actions";
 
 interface Props { initial: ServiceItem[]; saved: boolean }
 

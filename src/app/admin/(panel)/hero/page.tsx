@@ -1,5 +1,5 @@
 import { getHeroContent } from "@/lib/content";
-import { saveHeroAction } from "../actions";
+import { saveHeroAction } from "@/app/admin/actions";
 
 export default async function HeroAdminPage({
   searchParams,

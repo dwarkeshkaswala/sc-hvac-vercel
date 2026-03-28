@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { BlogPost, ContentBlock } from "@/lib/blog";
-import { saveBlogPostAction } from "../actions";
+import { saveBlogPostAction } from "@/app/admin/actions";
 
 interface Props {
   initial: BlogPost;

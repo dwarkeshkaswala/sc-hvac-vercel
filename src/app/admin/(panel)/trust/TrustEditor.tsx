@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { TrustContent } from "@/lib/content";
-import { saveTrustAction } from "../actions";
+import { saveTrustAction } from "@/app/admin/actions";
 
 interface Props {
   initial: TrustContent;

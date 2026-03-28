@@ -1,5 +1,5 @@
 import { getContactContent } from "@/lib/content";
-import { saveContactAction } from "../actions";
+import { saveContactAction } from "@/app/admin/actions";
 
 export default async function ContactAdminPage({
   searchParams,

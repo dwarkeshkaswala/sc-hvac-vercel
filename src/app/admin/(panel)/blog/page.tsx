@@ -1,5 +1,5 @@
 import { getBlogPosts } from "@/lib/content";
-import { deleteBlogPostAction } from "../actions";
+import { deleteBlogPostAction } from "@/app/admin/actions";
 import Link from "next/link";
 
 export default async function BlogAdminPage() {

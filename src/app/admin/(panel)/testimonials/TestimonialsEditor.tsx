@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { TestimonialItem } from "@/lib/content";
-import { saveTestimonialsAction } from "../actions";
+import { saveTestimonialsAction } from "@/app/admin/actions";
 
 interface Props { initial: TestimonialItem[]; saved: boolean }
 
