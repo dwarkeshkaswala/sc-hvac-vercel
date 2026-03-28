@@ -196,10 +196,6 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
     </section>
   );
 }
-
-
-  return (
-    <section id="testimonials" ref={ref} className="py-24 bg-[var(--color-surface-raised)]">
       <div className="max-w-[1200px] mx-auto px-6">
 
         {/* Header */}
