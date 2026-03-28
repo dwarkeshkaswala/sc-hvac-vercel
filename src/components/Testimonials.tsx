@@ -22,6 +22,9 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
 
   const featured = testimonials[Math.min(active, testimonials.length - 1)] ?? testimonials[0];
 
+  const prev = () => setActive((a) => (a - 1 + testimonials.length) % testimonials.length);
+  const next = () => setActive((a) => (a + 1) % testimonials.length);
+
   return (
     <section id="testimonials" ref={ref} className="py-24 bg-[var(--color-surface-raised)]">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -81,10 +84,44 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
                 </div>
               </div>
             </div>
+
+            {/* Mobile: prev / dots / next — hidden on desktop */}
+            <div className="flex lg:hidden items-center justify-between mt-8 pt-6 border-t border-[var(--color-border)]">
+              <button
+                onClick={prev}
+                className="w-9 h-9 rounded-full border border-[var(--color-border)] flex items-center justify-center
+                  text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)] transition-all"
+                aria-label="Previous testimonial"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M12 5l-7 7 7 7" />
+                </svg>
+              </button>
+              <div className="flex gap-1.5 items-center">
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActive(i)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${active === i ? "w-5 bg-[var(--color-text-primary)]" : "w-1.5 bg-[var(--color-border-hover)]"}`}
+                    aria-label={`Go to testimonial ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={next}
+                className="w-9 h-9 rounded-full border border-[var(--color-border)] flex items-center justify-center
+                  text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)] transition-all"
+                aria-label="Next testimonial"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {/* Selector list */}
-          <div className="flex flex-col gap-2.5">
+          {/* Selector list — desktop only */}
+          <div className="hidden lg:flex flex-col gap-2.5">
             {testimonials.map((t, i) => (
               <button
                 key={t.name}

@@ -19,7 +19,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden bg-[var(--color-bg)]">
       {/* ── Main content ─────────────────────────────── */}
-      <div className="flex-1 max-w-[1200px] w-full mx-auto px-6 pt-[120px] pb-10
+      <div className="flex-1 max-w-[1200px] w-full mx-auto px-6 pt-[88px] sm:pt-[120px] pb-10
                       grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-10 items-center">
 
         {/* ── LEFT: Copy ─────────────────────────────── */}

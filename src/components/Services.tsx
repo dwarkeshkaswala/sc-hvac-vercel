@@ -79,7 +79,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
           {/* Right — feature panel */}
           <div
             key={active}
-            className="relative rounded-[24px] overflow-hidden bg-[var(--color-text-primary)] min-h-[500px]
+            className="relative rounded-[24px] overflow-hidden bg-[var(--color-text-primary)] min-h-[300px] sm:min-h-[500px]
               flex flex-col justify-end"
             style={{ animation: "svcFadeIn 0.35s ease" }}
           >
