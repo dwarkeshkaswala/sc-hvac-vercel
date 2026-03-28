@@ -38,9 +38,9 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
   }
 
   return (
-    <div className="flex gap-8 p-8 items-start">
+    <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
-      <div className="w-[560px] shrink-0">
+      <div className="w-full lg:w-[560px] shrink-0">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Testimonials</h1>
@@ -117,7 +117,7 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
       </div>
 
       {/* ─── Preview ─── */}
-      <div className="flex-1 sticky top-8">
+      <div className="flex-1 lg:sticky lg:top-8">
         <PreviewShell label="shreejihvac.com · Testimonials">
           <div className="p-4 bg-[#FAFAFA] space-y-3">
             {items.length === 0 ? (

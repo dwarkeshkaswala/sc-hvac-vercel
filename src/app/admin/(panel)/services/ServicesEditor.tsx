@@ -66,9 +66,9 @@ export default function ServicesEditor({ initial, saved }: Props) {
   const activeService = services[Math.min(previewActive, services.length - 1)] ?? services[0];
 
   return (
-    <div className="flex gap-8 p-8 items-start">
+    <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
-      <div className="w-[560px] shrink-0">
+      <div className="w-full lg:w-[560px] shrink-0">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Services</h1>
@@ -154,7 +154,7 @@ export default function ServicesEditor({ initial, saved }: Props) {
       </div>
 
       {/* ─── Preview ─── */}
-      <div className="flex-1 sticky top-8">
+      <div className="flex-1 lg:sticky lg:top-8">
         <PreviewShell label="shreejihvac.com · Services">
           <div className="p-5 bg-[#FAFAFA]">
             {services.length === 0 ? (

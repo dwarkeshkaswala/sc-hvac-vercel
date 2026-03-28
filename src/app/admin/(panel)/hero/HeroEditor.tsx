@@ -37,9 +37,9 @@ export default function HeroEditor({ initial, saved }: Props) {
   }
 
   return (
-    <div className="flex gap-8 p-8 items-start">
+    <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
-      <div className="w-[500px] shrink-0 space-y-5">
+      <div className="w-full lg:w-[500px] shrink-0 space-y-5">
         <div>
           <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Hero Section</h1>
           <p className="text-[13.5px] text-[#666] mt-1">Edit the homepage hero text, phone number, and stats.</p>
@@ -91,7 +91,7 @@ export default function HeroEditor({ initial, saved }: Props) {
       </div>
 
       {/* ─── Preview ─── */}
-      <div className="flex-1 sticky top-8">
+      <div className="flex-1 lg:sticky lg:top-8">
         <PreviewShell label="shreejihvac.com · Hero">
           <div className="p-6 bg-[#FAFAFA]">
             {/* Badge */}

@@ -37,9 +37,9 @@ export default function ContactEditor({ initial, saved }: Props) {
   ];
 
   return (
-    <div className="flex gap-8 p-8 items-start">
+    <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
-      <div className="w-[460px] shrink-0 space-y-4">
+      <div className="w-full lg:w-[460px] shrink-0 space-y-4">
         <div>
           <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Contact Info</h1>
           <p className="text-[13.5px] text-[#666] mt-1">Update phone, email, address, and working hours.</p>
@@ -99,7 +99,7 @@ export default function ContactEditor({ initial, saved }: Props) {
       </div>
 
       {/* ─── Preview ─── */}
-      <div className="flex-1 sticky top-8">
+      <div className="flex-1 lg:sticky lg:top-8">
         <PreviewShell label="shreejihvac.com · Contact">
           <div className="p-6 bg-[#FAFAFA]">
             <p className="text-[9px] font-semibold uppercase tracking-[0.09em] text-[#999] mb-2">

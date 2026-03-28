@@ -6,7 +6,7 @@ export default async function BlogAdminPage() {
   const posts = await getBlogPosts();
 
   return (
-    <div className="p-8 max-w-[760px]">
+    <div className="p-4 sm:p-8 max-w-[760px]">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Blog Posts</h1>
@@ -27,7 +27,7 @@ export default async function BlogAdminPage() {
       ) : (
         <div className="space-y-3">
           {posts.map((post) => (
-            <div key={post.slug} className="bg-white rounded-[16px] border border-[#E5E7EB] p-4 flex items-center gap-4">
+            <div key={post.slug} className="bg-white rounded-[16px] border border-[#E5E7EB] p-4 flex flex-wrap sm:flex-nowrap items-center gap-4">
               {post.image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

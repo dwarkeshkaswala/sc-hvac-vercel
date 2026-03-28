@@ -18,14 +18,14 @@ export default async function AdminDashboard() {
   ]);
 
   return (
-    <div className="p-8 max-w-[900px]">
+    <div className="p-4 sm:p-8 max-w-[900px]">
       <div className="mb-8">
         <h1 className="text-[26px] font-bold text-[#111111] tracking-[-0.02em]">Dashboard</h1>
         <p className="text-[14px] text-[#666] mt-1">Manage your website content from here.</p>
       </div>
 
       {/* Quick stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
           { label: "Blog posts", value: posts.length },
           { label: "Services", value: services.length },
@@ -39,7 +39,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Section cards */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {sections.map(({ label, href, desc }) => (
           <Link
             key={href}
