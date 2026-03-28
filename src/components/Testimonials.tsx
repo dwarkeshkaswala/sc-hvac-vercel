@@ -154,9 +154,8 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
 
           <div className={`grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start ${inView ? "animate-fade-up delay-1" : "opacity-0"}`}>
 
-            {/* Featured Quote card — ref for live-drag transform */}
+            {/* Featured Quote card — card stays fixed, only contents slide */}
             <div
-              ref={cardRef}
               className="relative bg-[var(--color-surface)] border border-[var(--color-border)]
                 rounded-[22px] p-9 max-sm:p-7 flex flex-col justify-between min-h-[300px]
                 overflow-hidden touch-pan-y select-none"
@@ -165,7 +164,7 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
               onTouchEnd={onTouchEnd}
             >
               {/* Content keyed to active — remounts on each nav, triggering slide-in animation */}
-              <div key={active} style={contentAnim} className="relative z-10 flex flex-col flex-1">
+              <div ref={cardRef} key={active} style={contentAnim} className="relative z-10 flex flex-col flex-1">
                 {/* Large quote mark */}
                 <span
                   className="absolute top-0 right-0 font-[var(--font-display)] text-[80px] font-extrabold leading-none select-none pointer-events-none"
