@@ -28,10 +28,15 @@ export default function Navbar() {
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-1">
-          {["Services", "Why Us", "Partners", "Contact"].map((label) => (
+          {[
+            { label: "Services", href: "/#services" },
+            { label: "Why Us", href: "/#why-us" },
+            { label: "Blog", href: "/blog" },
+            { label: "Contact", href: "/#contact" },
+          ].map(({ label, href }) => (
             <Link
               key={label}
-              href={`#${label.toLowerCase().replace(" ", "-")}`}
+              href={href}
               className="text-[15px] font-semibold text-[var(--color-text-primary)] px-4 py-2 rounded-full whitespace-nowrap
                 transition-all duration-250 ease-[var(--ease)] hover:text-[var(--color-blue)] hover:bg-[var(--color-blue-subtle)]"
             >

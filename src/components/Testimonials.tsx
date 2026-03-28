@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
 
 const testimonials = [
@@ -8,7 +9,7 @@ const testimonials = [
     name: "Rajesh Mehta",
     role: "Facility Manager",
     company: "Surat Diamond Bourse",
-    avatar: "RM",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=128&q=75",
     accent: "#2563EB",
     rating: 5,
     quote:
@@ -18,7 +19,7 @@ const testimonials = [
     name: "Priya Shah",
     role: "Director of Operations",
     company: "Lotus Multispecialty Hospital",
-    avatar: "PS",
+    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=128&q=75",
     accent: "#16A34A",
     rating: 5,
     quote:
@@ -28,7 +29,7 @@ const testimonials = [
     name: "Vikram Patel",
     role: "CEO",
     company: "Patel Cold Chain Logistics",
-    avatar: "VP",
+    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=128&q=75",
     accent: "#EC4899",
     rating: 5,
     quote:
@@ -38,7 +39,7 @@ const testimonials = [
     name: "Nisha Agarwal",
     role: "Project Head",
     company: "Greenfield IT Campus",
-    avatar: "NA",
+    photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=128&q=75",
     accent: "#8B5CF6",
     rating: 5,
     quote:
@@ -48,7 +49,7 @@ const testimonials = [
     name: "Suresh Joshi",
     role: "Plant Manager",
     company: "Surat Textile Mill",
-    avatar: "SJ",
+    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=128&q=75",
     accent: "#F59E0B",
     rating: 5,
     quote:
@@ -58,7 +59,7 @@ const testimonials = [
     name: "Manav Desai",
     role: "Owner",
     company: "Adajan Luxury Residency",
-    avatar: "MD",
+    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=128&q=75",
     accent: "#0EA5E9",
     rating: 5,
     quote:
@@ -129,11 +130,8 @@ export default function Testimonials() {
 
               {/* Author */}
               <div className="flex items-center gap-4">
-                <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center text-[13px] font-bold text-white shrink-0"
-                  style={{ background: featured.accent }}
-                >
-                  {featured.avatar}
+                <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border-2" style={{ borderColor: featured.accent }}>
+                  <Image src={featured.photo} alt={featured.name} fill className="object-cover" sizes="44px" />
                 </div>
                 <div>
                   <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">{featured.name}</p>
@@ -159,13 +157,10 @@ export default function Testimonials() {
                   }`}
               >
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0 transition-all duration-300"
-                  style={{
-                    background: active === i ? t.accent : `${t.accent}30`,
-                    color: active === i ? "#fff" : t.accent,
-                  }}
+                  className="relative w-9 h-9 rounded-full overflow-hidden shrink-0 transition-all duration-300"
+                  style={{ border: `2px solid ${active === i ? t.accent : "transparent"}` }}
                 >
-                  {t.avatar}
+                  <Image src={t.photo} alt={t.name} fill className="object-cover" sizes="36px" />
                 </div>
                 <div className="min-w-0">
                   <p className={`text-[13px] font-semibold truncate transition-colors duration-300 ${active === i ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)]"}`}>

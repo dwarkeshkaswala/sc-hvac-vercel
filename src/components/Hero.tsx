@@ -10,6 +10,14 @@ const stats = [
   { value: "30%",  label: "Avg. Energy Savings" },
 ];
 
+const avatars = [
+  { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&q=75", alt: "Rajesh M." },
+  { src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&q=75", alt: "Priya S." },
+  { src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=64&q=75", alt: "Vikram P." },
+  { src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=64&q=75", alt: "Nisha A." },
+  { src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=64&q=75", alt: "Suresh J." },
+];
+
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden bg-[var(--color-bg)]">
@@ -94,14 +102,9 @@ export default function Hero() {
           {/* Social proof avatars */}
           <div className="flex items-center gap-3 animate-fade-up delay-4">
             <div className="flex -space-x-2.5">
-              {["2563EB","16A34A","8B5CF6","EF4444","F59E0B"].map((c, i) => (
-                <div
-                  key={i}
-                  className="w-8 h-8 rounded-full border-2 border-[var(--color-bg)] flex items-center justify-center
-                             text-[10px] font-bold text-white"
-                  style={{ background: `#${c}` }}
-                >
-                  {["RM","PS","VP","NA","SJ"][i]}
+              {avatars.map((a, i) => (
+                <div key={i} className="relative w-8 h-8 rounded-full border-2 border-[var(--color-bg)] overflow-hidden shrink-0">
+                  <Image src={a.src} alt={a.alt} fill className="object-cover" sizes="32px" />
                 </div>
               ))}
             </div>
