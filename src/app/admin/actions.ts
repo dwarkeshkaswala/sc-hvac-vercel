@@ -68,6 +68,20 @@ export async function saveContactAction(formData: FormData) {
   redirect("/admin/contact?saved=1");
 }
 
+/* ── Hero (typed — used by HeroEditor client component) ───────── */
+
+export async function saveHeroDataAction(content: HeroContent) {
+  await requireAdmin();
+  await saveContent("site:hero", content);
+}
+
+/* ── Contact (typed — used by ContactEditor client component) ─── */
+
+export async function saveContactDataAction(content: ContactContent) {
+  await requireAdmin();
+  await saveContent("site:contact", content);
+}
+
 /* ── Services ────────────────────────────────────────────────── */
 
 export async function saveServicesAction(data: ServiceItem[]) {

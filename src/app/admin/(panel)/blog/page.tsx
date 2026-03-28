@@ -1,5 +1,5 @@
 import { getBlogPosts } from "@/lib/content";
-import { deleteBlogPostAction } from "@/app/admin/actions";
+import DeletePostButton from "./DeletePostButton";
 import Link from "next/link";
 
 export default async function BlogAdminPage() {
@@ -60,17 +60,7 @@ export default async function BlogAdminPage() {
                 >
                   Edit
                 </Link>
-                <form action={deleteBlogPostAction.bind(null, post.slug)}>
-                  <button
-                    type="submit"
-                    className="h-[32px] px-3 rounded-[8px] text-[12px] font-medium text-red-500 bg-red-50 hover:bg-red-100 transition-all"
-                    onClick={(e) => {
-                      if (!confirm(`Delete "${post.title}"?`)) e.preventDefault();
-                    }}
-                  >
-                    Delete
-                  </button>
-                </form>
+                <DeletePostButton slug={post.slug} title={post.title} />
               </div>
             </div>
           ))}
