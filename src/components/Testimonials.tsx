@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useLayoutEffect } from "react";
 import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
 import type { TestimonialItem } from "@/lib/content";
@@ -27,19 +27,22 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
   const isDragging = useRef(false);
   const isAnimating = useRef(false);
 
-  // Direct DOM ref for live-drag transform (avoids re-renders)
-  const cardRef = useRef<HTMLDivElement>(null);
+  // dragRef: STABLE div (never remounts) — receives live-drag transform.
+  // The keyed inner div handles slide-in animation independently.
+  const dragRef = useRef<HTMLDivElement>(null);
 
   const featured = testimonials[Math.min(active, testimonials.length - 1)] ?? testimonials[0];
 
-  // After active changes: reset the card's inline styles so slide-in animation plays cleanly
-  useEffect(() => {
-    const el = cardRef.current;
+  // Reset the stable drag layer before the browser paints the new slide-in content.
+  // useLayoutEffect (not useEffect) so there's no frame where dragRef is opacity:0
+  // with new content visible inside it.
+  useLayoutEffect(() => {
+    const el = dragRef.current;
     if (!el) return;
     el.style.transition = "none";
     el.style.transform = "translateX(0)";
     el.style.opacity = "1";
-    const t = setTimeout(() => { isAnimating.current = false; }, 420);
+    const t = setTimeout(() => { isAnimating.current = false; }, 400);
     return () => clearTimeout(t);
   }, [active]);
 
@@ -62,10 +65,8 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     isDragging.current = false;
-    const el = cardRef.current;
-    if (el) {
-      el.style.transition = "none";
-    }
+    const el = dragRef.current;
+    if (el) el.style.transition = "none";
   }
 
   function onTouchMove(e: React.TouchEvent) {
@@ -77,12 +78,11 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
     }
     if (isDragging.current) {
       e.preventDefault();
-      const el = cardRef.current;
+      const el = dragRef.current;
       if (el) {
-        // Damped drag — feels like resistance
         const damped = dx * 0.42;
         el.style.transform = `translateX(${damped}px)`;
-        el.style.opacity = `${Math.max(0.3, 1 - Math.abs(damped) / 160)}`;
+        el.style.opacity = `${Math.max(0.3, 1 - Math.abs(damped) / 180)}`;
       }
     }
   }
@@ -90,19 +90,19 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
   function onTouchEnd(e: React.TouchEvent) {
     if (touchStartX.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
-    const el = cardRef.current;
+    const el = dragRef.current;
 
     if (isDragging.current && Math.abs(dx) > 40) {
-      // Fly out, then navigate
+      // Fly the stable drag layer out, then navigate (triggers remount of keyed div)
       if (el) {
-        el.style.transition = "transform 0.17s ease-out, opacity 0.17s ease-out";
-        el.style.transform = `translateX(${dx < 0 ? "-52%" : "52%"})`;
+        el.style.transition = "transform 0.16s ease-out, opacity 0.16s ease-out";
+        el.style.transform = `translateX(${dx < 0 ? "-55%" : "55%"})`;
         el.style.opacity = "0";
       }
       isAnimating.current = true;
-      setTimeout(() => navigate(dx < 0 ? "next" : "prev"), 170);
+      setTimeout(() => navigate(dx < 0 ? "next" : "prev"), 160);
     } else {
-      // Spring back to resting position
+      // Spring back
       if (el) {
         el.style.transition = "transform 0.42s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease";
         el.style.transform = "translateX(0)";
@@ -115,23 +115,23 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
     isDragging.current = false;
   }
 
-  // CSS keyframe animation applied to the new content on each nav
+  // CSS animation for new content sliding in from the correct side
   const contentAnim: React.CSSProperties =
     enterFrom === "right"
-      ? { animation: "tsli-from-right 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both" }
+      ? { animation: "tsli-from-right 0.32s cubic-bezier(0.25,0.46,0.45,0.94) both" }
       : enterFrom === "left"
-      ? { animation: "tsli-from-left 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both" }
+      ? { animation: "tsli-from-left 0.32s cubic-bezier(0.25,0.46,0.45,0.94) both" }
       : {};
 
   return (
     <>
       <style>{`
         @keyframes tsli-from-right {
-          from { transform: translateX(56px); opacity: 0; }
+          from { transform: translateX(48px); opacity: 0; }
           to   { transform: translateX(0);    opacity: 1; }
         }
         @keyframes tsli-from-left {
-          from { transform: translateX(-56px); opacity: 0; }
+          from { transform: translateX(-48px); opacity: 0; }
           to   { transform: translateX(0);     opacity: 1; }
         }
       `}</style>
@@ -154,7 +154,7 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
 
           <div className={`grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 items-start ${inView ? "animate-fade-up delay-1" : "opacity-0"}`}>
 
-            {/* Featured Quote card — card stays fixed, only contents slide */}
+            {/* Featured Quote card — card stays completely fixed */}
             <div
               className="relative bg-[var(--color-surface)] border border-[var(--color-border)]
                 rounded-[22px] p-9 max-sm:p-7 flex flex-col justify-between min-h-[300px]
@@ -163,46 +163,55 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
             >
-              {/* Content keyed to active — remounts on each nav, triggering slide-in animation */}
-              <div ref={cardRef} key={active} style={contentAnim} className="relative z-10 flex flex-col flex-1">
-                {/* Large quote mark */}
-                <span
-                  className="absolute top-0 right-0 font-[var(--font-display)] text-[80px] font-extrabold leading-none select-none pointer-events-none"
-                  style={{ color: `${featured.accent}12` }}
-                >
-                  &ldquo;
-                </span>
-
-                {/* Stars */}
-                <div className="flex gap-0.5 mb-6">
-                  {Array.from({ length: featured.rating }).map((_, i) => (
-                    <StarIcon key={i} />
-                  ))}
-                </div>
-
-                {/* Quote */}
-                <blockquote className="font-[var(--font-display)] text-[18px] max-sm:text-[16px] font-semibold tracking-[-0.02em] leading-[1.55] text-[var(--color-text-primary)] mb-8">
-                  &ldquo;{featured.quote}&rdquo;
-                </blockquote>
-
-                {/* Author */}
-                <div className="flex items-center gap-4 mt-auto">
-                  <div
-                    className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border-2"
-                    style={{ borderColor: featured.accent }}
+              {/*
+                dragRef: stable layer — never remounts, handles live-drag transform.
+                Card stays fixed; only this layer moves during drag/fly-out.
+              */}
+              <div ref={dragRef} className="relative z-10 flex flex-col flex-1">
+                {/*
+                  Keyed inner div — remounts on every nav, plays slide-in animation.
+                  No ref here, no inline style interference.
+                */}
+                <div key={active} style={contentAnim} className="flex flex-col flex-1">
+                  {/* Large quote mark */}
+                  <span
+                    className="absolute top-0 right-0 font-[var(--font-display)] text-[80px] font-extrabold leading-none select-none pointer-events-none"
+                    style={{ color: `${featured.accent}12` }}
                   >
-                    <Image src={featured.photo} alt={featured.name} fill className="object-cover" sizes="44px" />
+                    &ldquo;
+                  </span>
+
+                  {/* Stars */}
+                  <div className="flex gap-0.5 mb-6">
+                    {Array.from({ length: featured.rating }).map((_, i) => (
+                      <StarIcon key={i} />
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">{featured.name}</p>
-                    <p className="text-[12.5px] text-[var(--color-text-secondary)]">
-                      {featured.role} &middot; {featured.company}
-                    </p>
+
+                  {/* Quote */}
+                  <blockquote className="font-[var(--font-display)] text-[18px] max-sm:text-[16px] font-semibold tracking-[-0.02em] leading-[1.55] text-[var(--color-text-primary)] mb-8">
+                    &ldquo;{featured.quote}&rdquo;
+                  </blockquote>
+
+                  {/* Author */}
+                  <div className="flex items-center gap-4 mt-auto">
+                    <div
+                      className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border-2"
+                      style={{ borderColor: featured.accent }}
+                    >
+                      <Image src={featured.photo} alt={featured.name} fill className="object-cover" sizes="44px" />
+                    </div>
+                    <div>
+                      <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">{featured.name}</p>
+                      <p className="text-[12.5px] text-[var(--color-text-secondary)]">
+                        {featured.role} &middot; {featured.company}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Mobile: prev / dots / next — outside keyed div so it doesn't animate */}
+              {/* Mobile: prev / dots / next — outside drag layer, always stable */}
               <div className="flex lg:hidden items-center justify-between mt-8 pt-6 border-t border-[var(--color-border)]">
                 <button
                   onClick={prev}
