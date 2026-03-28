@@ -93,14 +93,22 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
     const el = dragRef.current;
 
     if (isDragging.current && Math.abs(dx) > 40) {
-      // Fly the stable drag layer out, then navigate (triggers remount of keyed div)
+      // Fly the stable drag layer out, then update active directly after fly-out
       if (el) {
         el.style.transition = "transform 0.16s ease-out, opacity 0.16s ease-out";
         el.style.transform = `translateX(${dx < 0 ? "-55%" : "55%"})`;
         el.style.opacity = "0";
       }
       isAnimating.current = true;
-      setTimeout(() => navigate(dx < 0 ? "next" : "prev"), 160);
+      const dir = dx < 0 ? "next" : "prev";
+      setTimeout(() => {
+        setEnterFrom(dir === "next" ? "right" : "left");
+        setActive((a) =>
+          dir === "next"
+            ? (a + 1) % testimonials.length
+            : (a - 1 + testimonials.length) % testimonials.length
+        );
+      }, 160);
     } else {
       // Spring back
       if (el) {
