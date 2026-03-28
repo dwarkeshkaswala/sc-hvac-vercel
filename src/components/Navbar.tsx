@@ -32,6 +32,7 @@ export default function Navbar() {
             { label: "Services", href: "/#services" },
             { label: "Why Us", href: "/#why-us" },
             { label: "Blog", href: "/blog" },
+            { label: "Calculator", href: "/tools/heat-load-calculator" },
             { label: "Contact", href: "/#contact" },
           ].map(({ label, href }) => (
             <Link
