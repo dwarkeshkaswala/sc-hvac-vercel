@@ -62,7 +62,7 @@ export default function Trust({ data }: { data?: TrustContent }) {
             <div className="relative grid grid-cols-2 gap-px bg-black/[0.06] rounded-[16px] overflow-hidden mt-8">
               {stats.map((s) => (
                 <div key={s.label} className="bg-[#F2F2F2] px-5 py-5">
-                  <p className="font-[var(--font-display)] text-[30px] font-black tracking-[-0.04em] text-[var(--color-text-primary)] leading-none mb-1">{s.value}</p>
+                  <p className="font-[var(--font-display)] text-[30px] font-black tracking-[-0.04em] text-[#0000B8] leading-none mb-1">{s.value}</p>
                   <p className="text-[10.5px] text-[var(--color-text-tertiary)] font-semibold uppercase tracking-[0.07em]">{s.label}</p>
                 </div>
               ))}
@@ -77,12 +77,12 @@ export default function Trust({ data }: { data?: TrustContent }) {
                 className="group relative bg-[var(--color-surface)] border border-[var(--color-border)]
                   rounded-[20px] p-6 overflow-hidden
                   transition-all duration-400 ease-[var(--ease)]
-                  hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.07)] hover:border-[var(--color-border-hover)]"
+                  hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,184,0.08)] hover:border-[#FF7F00]/40"
               >
                 {/* watermark number */}
                 <span className="absolute -bottom-2 right-4 font-[var(--font-display)] text-[72px] font-black
                   leading-none select-none pointer-events-none text-black/[0.04]
-                  transition-colors duration-400 group-hover:text-black/[0.06]">
+                  transition-colors duration-400 group-hover:text-[#0000B8]/[0.08]">
                   {p.num}
                 </span>
 
@@ -92,7 +92,8 @@ export default function Trust({ data }: { data?: TrustContent }) {
                     transition-all duration-300 group-hover:bg-[#0000B8] group-hover:text-white group-hover:border-transparent">
                     {PILLAR_ICONS[pillars.indexOf(p) % PILLAR_ICONS.length]}
                   </div>
-                  <h3 className="font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text-primary)] tracking-[-0.015em] mb-1.5">
+                  <h3 className="font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text-primary)] tracking-[-0.015em] mb-1.5
+                    transition-colors duration-300 group-hover:text-[#FF7F00]">
                     {p.title}
                   </h3>
                   <p className="text-[12.5px] text-[var(--color-text-secondary)] leading-[1.7]">

@@ -64,11 +64,11 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                 {/* ─ Header / trigger row ─ */}
                 <button
                   onClick={() => toggleMobile(i)}
-                  className={`w-full flex items-center gap-4 px-5 py-[18px] text-left
+                  className={`group w-full flex items-center gap-4 px-5 py-[18px] text-left
                     transition-colors duration-300 ease-[var(--ease)]
                     ${isOpen
-                      ? "bg-[var(--color-text-primary)]"
-                      : "bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)]"
+                      ? "bg-[#0000B8]"
+                      : "bg-[var(--color-surface)] hover:bg-[var(--color-orange-subtle)]"
                     }`}
                 >
                   <span className={`text-[11px] font-bold tracking-[0.06em] shrink-0 w-7 transition-colors duration-300
@@ -76,7 +76,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                     {item.id}
                   </span>
                   <span className={`font-[var(--font-display)] text-[16px] font-bold tracking-[-0.02em] flex-1 transition-colors duration-300
-                    ${isOpen ? "text-white" : "text-[var(--color-text-primary)]"}`}>
+                    ${isOpen ? "text-white" : "text-[var(--color-text-primary)] group-hover:text-[#FF7F00]"}`}>
                     {item.title}
                   </span>
                   {/* Chevron */}
@@ -97,7 +97,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                 >
                   <div className="overflow-hidden">
                     {/* Image panel — flush below the dark header, no gap, no border-radius on top */}
-                    <div className="relative h-[260px] bg-[var(--color-text-primary)]">
+                    <div className="relative h-[260px] bg-[#0000B8]">
                       <Image
                         src={item.image}
                         alt={item.title}
@@ -107,7 +107,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                       />
                       {/* Gradient: very thin transparent strip at top (where it connects to the header),
                           then transitions to the dark overlay for the content below */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-text-primary)]/60 via-transparent to-black/80" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#0000B8]/60 via-transparent to-black/80" />
                       {/* Content */}
                       <div className="absolute bottom-0 left-0 right-0 p-5 pb-6">
                         <p className="text-[13.5px] text-white/70 leading-[1.75] mb-4">
@@ -147,8 +147,8 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                 className={`group flex items-center gap-4 px-5 py-4 rounded-[16px] text-left
                   transition-all duration-300 ease-[var(--ease)]
                   ${active === i
-                    ? "bg-[var(--color-text-primary)] text-white shadow-[0_8px_24px_rgba(0,0,0,0.14)]"
-                    : "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
+                    ? "bg-[#0000B8] text-white shadow-[0_8px_24px_rgba(0,0,184,0.22)]"
+                    : "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-orange-subtle)] hover:text-[#FF7F00]"
                   }`}
               >
                 <span className={`text-[11px] font-bold tracking-[0.06em] shrink-0 w-7
@@ -174,7 +174,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
           {/* Right — feature panel */}
           <div
             key={active}
-            className="relative rounded-[24px] overflow-hidden bg-[var(--color-text-primary)] min-h-[300px] sm:min-h-[500px]
+            className="relative rounded-[24px] overflow-hidden bg-[#0000B8] min-h-[300px] sm:min-h-[500px]
               flex flex-col justify-end"
             style={{ animation: "svcFadeIn 0.35s ease" }}
           >
