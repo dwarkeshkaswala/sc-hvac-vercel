@@ -57,7 +57,7 @@ export interface ContactSubmission {
 /* ── Defaults ──────────────────────────────────────────────── */
 
 export const defaultHero: HeroContent = {
-  badge: "Surat's most trusted HVAC partner",
+  badge: "India's most trusted HVAC partner",
   line1: "Precision",
   line2: "climate",
   line3: "engineering.",

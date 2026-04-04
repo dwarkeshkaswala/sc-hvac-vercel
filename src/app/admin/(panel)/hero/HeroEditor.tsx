@@ -52,7 +52,7 @@ export default function HeroEditor({ initial, saved }: Props) {
         )}
 
         <Card title="Badge text">
-          <EInput value={d.badge} placeholder="Surat's most trusted HVAC partner" onChange={(v) => set("badge", v)} />
+          <EInput value={d.badge} placeholder="India's most trusted HVAC partner" onChange={(v) => set("badge", v)} />
         </Card>
 
         <Card title="Headline (3 lines)">

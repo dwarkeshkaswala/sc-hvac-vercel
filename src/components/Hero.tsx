@@ -30,8 +30,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
                           border border-[var(--color-border)] rounded-full text-[12px]
                           text-[var(--color-text-secondary)] mb-8 animate-fade-up">
             <span className="relative flex w-2 h-2">
-              <span className="absolute inset-0 rounded-full bg-[var(--color-orange)] animate-[ping_2s_ease-out_infinite] opacity-60" />
-              <span className="relative w-2 h-2 rounded-full bg-[var(--color-orange)]" />
+              <span className="absolute inset-0 rounded-full bg-green-500 animate-[ping_2s_ease-out_infinite] opacity-60" />
+              <span className="relative w-2 h-2 rounded-full bg-green-500" />
             </span>
             {d.badge}
           </div>

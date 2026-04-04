@@ -7,10 +7,10 @@ import nodemailer from "nodemailer";
  *   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
  *
  * The "from" address uses SMTP_USER (or SMTP_FROM if set separately).
- * All submissions go to info@shreejicooling.com.
+ * All submissions go to info@shreejihvac.com.
  */
 
-const RECIPIENT = "info@shreejicooling.com";
+const RECIPIENT = "info@shreejihvac.com";
 
 function getTransport() {
   return nodemailer.createTransport({
