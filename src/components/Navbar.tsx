@@ -10,6 +10,7 @@ const navItems = [
   { label: "Blog", href: "/blog" },
   { label: "Why Us", href: "/#why-us" },
   { label: "Calculator", href: "/tools/heat-load-calculator" },
+  { label: "Shop", href: "https://shop.shreejihvac.com" },
 ];
 
 export default function Navbar() {
