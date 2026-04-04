@@ -8,7 +8,7 @@ import { defaultTestimonials } from "@/lib/content";
 
 function StarIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF7F00" stroke="none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B" stroke="none">
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   );
@@ -150,7 +150,7 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
           {/* Header */}
           <div className={`mb-14 ${inView ? "animate-fade-up" : "opacity-0"}`}>
             <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
-              <span className="w-8 h-px bg-[#0000B8]" />
+              <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
               Client Testimonials
             </span>
             <h2 className="font-[var(--font-display)] text-[clamp(30px,3.5vw,44px)] font-bold tracking-[-0.03em] leading-[1.1]">

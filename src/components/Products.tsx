@@ -68,7 +68,7 @@ export default function Products() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
             <div>
               <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
-                <span className="w-8 h-px bg-[#0000B8]" />
+                <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
                 Our Products
               </span>
               <h2 className="font-[var(--font-display)] text-[clamp(30px,3.5vw,44px)] font-bold tracking-[-0.03em] leading-[1.1]">

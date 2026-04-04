@@ -58,7 +58,7 @@ export default function Navbar() {
                 key={label}
                 href={href}
                 className="text-[15px] font-semibold text-[var(--color-text-primary)] px-4 py-2 rounded-full whitespace-nowrap
-                  transition-all duration-250 ease-[var(--ease)] hover:text-[var(--color-blue)] hover:bg-[var(--color-blue-subtle)]"
+                  transition-all duration-250 ease-[var(--ease)] hover:text-[#FF7F00] hover:bg-[var(--color-orange-subtle)]"
               >
                 {label}
               </Link>
@@ -72,10 +72,10 @@ export default function Navbar() {
               className="hidden sm:inline-flex items-center gap-2 h-[44px] sm:h-[50px] px-5 sm:px-7 rounded-full whitespace-nowrap
                 bg-[#0000B8] text-white text-[14px] sm:text-[15px] font-semibold
                 transition-all duration-300 ease-[var(--ease)]
-                hover:bg-[#000096] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(0,0,184,0.25)]"
+                hover:bg-[#FF7F00] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,127,0,0.35)]"
             >
               Get a Quote
-              <span className="text-[#FF7F00]">→</span>
+              <span>→</span>
             </Link>
 
             {/* Hamburger — mobile only */}
@@ -113,7 +113,7 @@ export default function Navbar() {
                 href={href}
                 onClick={() => setOpen(false)}
                 className="text-[15px] font-semibold text-[var(--color-text-primary)] px-4 py-3 rounded-[12px]
-                  hover:bg-[var(--color-blue-subtle)] hover:text-[var(--color-blue)] transition-all duration-200"
+                  hover:bg-[var(--color-orange-subtle)] hover:text-[#FF7F00] transition-all duration-200"
               >
                 {label}
               </Link>
@@ -123,9 +123,9 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="mt-2 flex items-center justify-center gap-2 h-[50px] rounded-full
                 bg-[#0000B8] text-white text-[15px] font-semibold
-                transition-all duration-300 ease-[var(--ease)] hover:bg-[#000096]"
+                transition-all duration-300 ease-[var(--ease)] hover:bg-[#FF7F00]"
             >
-              Get a Quote <span className="text-[#FF7F00]">→</span>
+              Get a Quote →
             </Link>
           </div>
         </div>
