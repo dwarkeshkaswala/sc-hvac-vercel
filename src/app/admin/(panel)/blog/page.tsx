@@ -14,7 +14,7 @@ export default async function BlogAdminPage() {
         </div>
         <Link
           href="/admin/blog/new"
-          className="h-[38px] px-5 rounded-[10px] bg-[#2563EB] text-white text-[13px] font-semibold hover:bg-[#1d4ed8] transition-all inline-flex items-center"
+          className="h-[38px] px-5 rounded-[10px] bg-[#0000B8] text-white text-[13px] font-semibold hover:bg-[#000096] transition-all inline-flex items-center"
         >
           + New post
         </Link>
@@ -38,7 +38,7 @@ export default async function BlogAdminPage() {
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#0000B8] bg-[#0000B8]/8 px-2 py-0.5 rounded-full">
                     {post.tag}
                   </span>
                   <span className="text-[11px] text-[#999]">{post.date}</span>

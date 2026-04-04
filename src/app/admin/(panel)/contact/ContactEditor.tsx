@@ -69,7 +69,7 @@ export default function ContactEditor({ initial, saved }: Props) {
                 placeholder={f.placeholder}
                 onChange={(e) => set(f.key, e.target.value)}
                 className="w-full h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA]
-                  text-[13.5px] text-[#111] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all"
+                  text-[13.5px] text-[#111] focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all"
               />
             </div>
           ))}
@@ -85,7 +85,7 @@ export default function ContactEditor({ initial, saved }: Props) {
               onChange={(e) => set("address", e.target.value)}
               className="w-full px-3.5 py-3 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA]
                 text-[13.5px] text-[#111] leading-[1.7] resize-y
-                focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all"
+                focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all"
             />
           </div>
 

@@ -10,7 +10,7 @@ const products = [
     title: "VRF Systems",
     desc: "Variable Refrigerant Flow systems for large commercial spaces — precise zone control, unmatched energy efficiency.",
     tags: ["Multi-zone", "Heat recovery", "Inverter"],
-    accent: "#2563EB",
+    accent: "#0000B8",
     image: "https://images.unsplash.com/photo-1596566618567-e10734dc64a0?auto=format&fit=crop&w=900&q=75",
   },
   {

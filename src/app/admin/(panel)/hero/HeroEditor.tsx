@@ -172,7 +172,7 @@ function EInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="w-full h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA]
-          text-[13.5px] text-[#111] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10
+          text-[13.5px] text-[#111] focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10
           transition-all duration-200"
       />
     </div>
@@ -191,7 +191,7 @@ function ETextarea({
       rows={rows}
       className="w-full px-3.5 py-3 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA]
         text-[13.5px] text-[#111] leading-[1.7] resize-y
-        focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10
+        focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10
         transition-all duration-200"
     />
   );

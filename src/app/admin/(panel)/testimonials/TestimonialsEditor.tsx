@@ -27,7 +27,7 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
   const add = () =>
     setItems((s) => [
       ...s,
-      { name: "", role: "", company: "", photo: "", accent: "#2563EB", rating: 5, quote: "" },
+      { name: "", role: "", company: "", photo: "", accent: "#0000B8", rating: 5, quote: "" },
     ]);
 
   const remove = (i: number) => setItems((s) => s.filter((_, idx) => idx !== i));
@@ -46,7 +46,7 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
             <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Testimonials</h1>
             <p className="text-[13.5px] text-[#666] mt-1">Add or edit client reviews shown on the site.</p>
           </div>
-          <button onClick={add} className="h-[38px] px-5 rounded-[10px] bg-[#2563EB] text-white text-[13px] font-semibold hover:bg-[#1d4ed8] transition-all">
+          <button onClick={add} className="h-[38px] px-5 rounded-[10px] bg-[#0000B8] text-white text-[13px] font-semibold hover:bg-[#000096] transition-all">
             + Add review
           </button>
         </div>
@@ -137,7 +137,7 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
                     ) : (
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
-                        style={{ background: t.accent || "#2563EB" }}
+                        style={{ background: t.accent || "#0000B8" }}
                       >
                         {t.name?.[0]?.toUpperCase() || "?"}
                       </div>
@@ -169,7 +169,7 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
                   {/* Accent bar */}
                   <div
                     className="mt-3 h-0.5 w-8 rounded-full"
-                    style={{ background: t.accent || "#2563EB" }}
+                    style={{ background: t.accent || "#0000B8" }}
                   />
                 </div>
               ))
@@ -181,6 +181,6 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
   );
 }
 
-const inp = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
-const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
+const inp = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
+const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
 

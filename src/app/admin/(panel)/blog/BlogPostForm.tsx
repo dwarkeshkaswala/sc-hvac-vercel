@@ -178,7 +178,7 @@ export default function BlogPostForm({ initial, isNew }: Props) {
           {post.content.map((block, i) => (
             <div key={i} className="border border-[#E5E7EB] rounded-[12px] p-3.5 group">
               <div className="flex items-center justify-between mb-2.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.07em] text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-[0.07em] text-[#0000B8] bg-[#0000B8]/8 px-2 py-0.5 rounded-full">
                   {block.type}
                 </span>
                 <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -207,7 +207,7 @@ export default function BlogPostForm({ initial, isNew }: Props) {
                     </div>
                   ))}
                   <button onClick={() => addListItem(i)}
-                    className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1d4ed8] transition-colors">
+                    className="text-[12px] font-semibold text-[#0000B8] hover:text-[#000096] transition-colors">
                     + Add item
                   </button>
                 </div>
@@ -228,7 +228,7 @@ export default function BlogPostForm({ initial, isNew }: Props) {
         <div className="flex flex-wrap gap-2">
           {BLOCK_TYPES.map((t) => (
             <button key={t} onClick={() => addBlock(t)}
-              className="h-[30px] px-3 rounded-[8px] text-[11px] font-semibold text-[#555] border border-[#E5E7EB] bg-[#FAFAFA] hover:border-[#2563EB] hover:text-[#2563EB] transition-all">
+              className="h-[30px] px-3 rounded-[8px] text-[11px] font-semibold text-[#555] border border-[#E5E7EB] bg-[#FAFAFA] hover:border-[#0000B8] hover:text-[#0000B8] transition-all">
               + {t}
             </button>
           ))}
@@ -246,7 +246,7 @@ export default function BlogPostForm({ initial, isNew }: Props) {
   );
 }
 
-const inp  = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
-const ta   = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
+const inp  = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
+const ta   = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
 const lbl  = "block text-[11px] font-bold uppercase tracking-[0.06em] text-[#999] mb-1.5";
 const ctrl = "w-[24px] h-[24px] rounded-[6px] text-[#999] hover:bg-[#F3F4F6] flex items-center justify-center text-[14px] font-bold transition-colors";

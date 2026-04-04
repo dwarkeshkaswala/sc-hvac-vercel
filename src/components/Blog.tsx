@@ -8,7 +8,7 @@ import { posts } from "@/lib/blog";
 
 const tagColors: Record<string, string> = {
   "Energy Saving": "bg-green-50 text-green-700",
-  Technology: "bg-blue-50 text-blue-700",
+  Technology: "bg-[#0000B8]/8 text-[#0000B8]",
   Maintenance: "bg-orange-50 text-orange-700",
   Industry: "bg-violet-50 text-violet-700",
 };
@@ -83,7 +83,7 @@ export default function Blog() {
 
                 <h3 className="font-[var(--font-display)] text-[14.5px] font-bold text-[var(--color-text-primary)]
                   tracking-[-0.015em] leading-snug mb-2
-                  transition-colors duration-200 group-hover:text-[#2563EB]">
+                  transition-colors duration-200 group-hover:text-[#0000B8]">
                   {post.title}
                 </h3>
 

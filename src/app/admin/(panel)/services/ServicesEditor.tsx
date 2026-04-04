@@ -74,7 +74,7 @@ export default function ServicesEditor({ initial, saved }: Props) {
             <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Services</h1>
             <p className="text-[13.5px] text-[#666] mt-1">Add, remove, or edit service cards.</p>
           </div>
-          <button onClick={addService} className="h-[38px] px-5 rounded-[10px] bg-[#2563EB] text-white text-[13px] font-semibold hover:bg-[#1d4ed8] transition-all">
+          <button onClick={addService} className="h-[38px] px-5 rounded-[10px] bg-[#0000B8] text-white text-[13px] font-semibold hover:bg-[#000096] transition-all">
             + Add service
           </button>
         </div>
@@ -121,7 +121,7 @@ export default function ServicesEditor({ initial, saved }: Props) {
                   <span className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#999]">Feature bullets</span>
                   <button
                     onClick={() => addItem(si)}
-                    className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1d4ed8]"
+                    className="text-[12px] font-semibold text-[#0000B8] hover:text-[#000096]"
                   >+ Add</button>
                 </div>
                 <div className="space-y-2">
@@ -222,6 +222,6 @@ export default function ServicesEditor({ initial, saved }: Props) {
   );
 }
 
-const inp = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
-const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
+const inp = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
+const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
 

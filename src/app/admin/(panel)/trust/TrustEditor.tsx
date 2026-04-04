@@ -98,7 +98,7 @@ export default function TrustEditor({ initial, saved }: Props) {
             <button
               type="button"
               onClick={addPillar}
-              className="text-[12px] font-semibold text-[#2563EB] hover:text-[#1d4ed8] transition-colors"
+              className="text-[12px] font-semibold text-[#0000B8] hover:text-[#000096] transition-colors"
             >
               + Add pillar
             </button>
@@ -198,5 +198,5 @@ export default function TrustEditor({ initial, saved }: Props) {
 }
 
 const inp =
-  "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/10 transition-all";
+  "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
 

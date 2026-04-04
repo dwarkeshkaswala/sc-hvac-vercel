@@ -120,7 +120,7 @@ export const defaultTestimonials: TestimonialItem[] = [
     role: "Facility Manager",
     company: "Surat Diamond Bourse",
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=128&q=75",
-    accent: "#2563EB",
+    accent: "#0000B8",
     rating: 5,
     quote:
       "Shreeji HVAC handled our 480 TR VRF installation across 4 floors seamlessly. Zero downtime since commissioning — truly professional end-to-end execution.",

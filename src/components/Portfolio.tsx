@@ -11,7 +11,7 @@ const projects = [
     scope: "VRF System — 480 TR",
     year: "2024",
     image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=900&q=75",
-    accent: "#2563EB",
+    accent: "#0000B8",
   },
   {
     title: "Industrial Cold Chain Hub",

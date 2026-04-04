@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const tagColors: Record<string, string> = {
   "Energy Saving": "bg-green-50 text-green-700",
-  Technology: "bg-blue-50 text-blue-700",
+  Technology: "bg-[#0000B8]/8 text-[#0000B8]",
   Maintenance: "bg-orange-50 text-orange-700",
   Industry: "bg-violet-50 text-violet-700",
 };
@@ -69,7 +69,7 @@ export default async function BlogListPage() {
                   <span className="text-[12px] text-[var(--color-text-tertiary)]">{featured.readTime}</span>
                 </div>
                 <h2 className="font-[var(--font-display)] text-[clamp(22px,2.4vw,32px)] font-bold tracking-[-0.025em] leading-[1.2] mb-4
-                  transition-colors duration-200 group-hover:text-[#2563EB]">
+                  transition-colors duration-200 group-hover:text-[#0000B8]">
                   {featured.title}
                 </h2>
                 <p className="text-[14px] text-[var(--color-text-secondary)] leading-[1.8] mb-6">
@@ -120,7 +120,7 @@ export default async function BlogListPage() {
                   </div>
                   <h3 className="font-[var(--font-display)] text-[15.5px] font-bold text-[var(--color-text-primary)]
                     tracking-[-0.015em] leading-snug mb-2 flex-1
-                    transition-colors duration-200 group-hover:text-[#2563EB]">
+                    transition-colors duration-200 group-hover:text-[#0000B8]">
                     {post.title}
                   </h3>
                   <p className="text-[12.5px] text-[var(--color-text-secondary)] leading-[1.7] mb-4">

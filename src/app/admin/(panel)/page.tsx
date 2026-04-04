@@ -44,11 +44,11 @@ export default async function AdminDashboard() {
           <Link
             key={href}
             href={href}
-            className="bg-white rounded-[16px] border border-[#E5E7EB] p-5 hover:border-[#2563EB] hover:shadow-[0_0_0_3px_rgba(37,99,235,0.08)] transition-all duration-200 group"
+            className="bg-white rounded-[16px] border border-[#E5E7EB] p-5 hover:border-[#0000B8] hover:shadow-[0_0_0_3px_rgba(0,0,184,0.08)] transition-all duration-200 group"
           >
-            <p className="text-[15px] font-bold text-[#111111] group-hover:text-[#2563EB] transition-colors">{label}</p>
+            <p className="text-[15px] font-bold text-[#111111] group-hover:text-[#0000B8] transition-colors">{label}</p>
             <p className="text-[12.5px] text-[#666] mt-1">{desc}</p>
-            <p className="text-[12px] text-[#2563EB] font-semibold mt-3">Edit →</p>
+            <p className="text-[12px] text-[#0000B8] font-semibold mt-3">Edit →</p>
           </Link>
         ))}
       </div>

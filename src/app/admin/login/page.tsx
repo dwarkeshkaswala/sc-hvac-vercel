@@ -42,7 +42,7 @@ export default async function LoginPage({
               autoComplete="email"
               className="w-full h-[46px] px-4 rounded-[12px] bg-white/[0.06] border border-white/[0.1]
                 text-white text-[14px] placeholder:text-white/25
-                focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20
+                focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/20
                 transition-all duration-200"
               placeholder="admin@shreejihvac.com"
             />
@@ -59,7 +59,7 @@ export default async function LoginPage({
               autoComplete="current-password"
               className="w-full h-[46px] px-4 rounded-[12px] bg-white/[0.06] border border-white/[0.1]
                 text-white text-[14px] placeholder:text-white/25
-                focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20
+                focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/20
                 transition-all duration-200"
               placeholder="••••••••"
             />
@@ -67,8 +67,8 @@ export default async function LoginPage({
 
           <button
             type="submit"
-            className="w-full h-[46px] rounded-[12px] bg-[#2563EB] text-white text-[14px] font-semibold
-              hover:bg-[#1D4ED8] transition-all duration-200 mt-2"
+            className="w-full h-[46px] rounded-[12px] bg-[#0000B8] text-white text-[14px] font-semibold
+              hover:bg-[#000096] transition-all duration-200 mt-2"
           >
             Sign in →
           </button>

@@ -42,11 +42,11 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0" onClick={() => setOpen(false)}>
             <Image
-              src="/logo.png"
+              src="/logo with contact.svg"
               alt="Shreeji HVAC & R Trading LLP"
-              width={200}
-              height={40}
-              className="h-9 sm:h-12 w-auto object-contain"
+              width={240}
+              height={48}
+              className="h-9 sm:h-11 w-auto object-contain"
               priority
             />
           </Link>

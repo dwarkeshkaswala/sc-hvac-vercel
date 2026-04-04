@@ -30,8 +30,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
                           border border-[var(--color-border)] rounded-full text-[12px]
                           text-[var(--color-text-secondary)] mb-8 animate-fade-up">
             <span className="relative flex w-2 h-2">
-              <span className="absolute inset-0 rounded-full bg-[var(--color-green)] animate-[ping_2s_ease-out_infinite] opacity-60" />
-              <span className="relative w-2 h-2 rounded-full bg-[var(--color-green)]" />
+              <span className="absolute inset-0 rounded-full bg-[var(--color-orange)] animate-[ping_2s_ease-out_infinite] opacity-60" />
+              <span className="relative w-2 h-2 rounded-full bg-[var(--color-orange)]" />
             </span>
             {d.badge}
           </div>
@@ -146,8 +146,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
           <div className="absolute -top-4 -left-6 bg-[var(--color-surface)] border border-[var(--color-border)]
                           rounded-[16px] px-4 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.09)]
                           flex items-center gap-3 min-w-[160px]">
-            <div className="w-9 h-9 rounded-xl bg-[#2563EB]/10 flex items-center justify-center shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-9 h-9 rounded-xl bg-[#0000B8]/10 flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0000B8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
                 <path d="M12 6v6l4 2" />
               </svg>
@@ -162,8 +162,8 @@ export default function Hero({ data }: { data?: HeroContent }) {
           <div className="absolute top-1/2 -right-7 -translate-y-1/2 bg-[var(--color-surface)] border border-[var(--color-border)]
                           rounded-[16px] px-4 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.09)]
                           flex items-center gap-3 min-w-[150px]">
-            <div className="w-9 h-9 rounded-xl bg-[#16A34A]/10 flex items-center justify-center shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-9 h-9 rounded-xl bg-[#FF7F00]/10 flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF7F00" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <path d="M22 4 12 14.01l-3-3" />
               </svg>
@@ -179,7 +179,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
                           rounded-[16px] px-4 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.24)]
                           flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4040D0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
               </svg>
             </div>

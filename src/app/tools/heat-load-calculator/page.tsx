@@ -223,7 +223,7 @@ function InputField({ label, unit, value, onChange, min, max, step, icon }: {
           step={step ?? 1}
           className={`w-full h-[46px] ${icon ? "pl-9" : "pl-4"} pr-3 rounded-[12px] border border-[var(--color-border)] bg-[var(--color-bg)]
             text-[15px] text-[var(--color-text-primary)] font-semibold tabular-nums
-            focus:outline-none focus:border-[#2563EB] focus:ring-3 focus:ring-[#2563EB]/8 
+            focus:outline-none focus:border-[#0000B8] focus:ring-3 focus:ring-[#0000B8]/8 
             transition-all duration-200 hover:border-[var(--color-border-hover)]`}
         />
         {unit && (
@@ -249,7 +249,7 @@ function SelectField({ label, value, onChange, options }: {
           text-[14px] text-[var(--color-text-primary)] font-semibold appearance-none cursor-pointer
           bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%2F%3E%3C/svg%3E')]
           bg-[length:12px] bg-[right_14px_center] bg-no-repeat
-          focus:outline-none focus:border-[#2563EB] focus:ring-3 focus:ring-[#2563EB]/8 
+          focus:outline-none focus:border-[#0000B8] focus:ring-3 focus:ring-[#0000B8]/8 
           transition-all duration-200 hover:border-[var(--color-border-hover)]"
       >
         {options.map((o) => (
@@ -322,7 +322,7 @@ export default function HeatLoadPage() {
   const ventPct = result.grandTotal > 0 ? ((result.ventilation.total + result.safetyAdded) / result.grandTotal) * 100 : 0;
 
   const donutSegments = [
-    { label: "Envelope", value: result.envelope.total, color: "#2563EB" },
+    { label: "Envelope", value: result.envelope.total, color: "#0000B8" },
     { label: "Internal", value: result.internal.total, color: "#F59E0B" },
     { label: "Vent. + Safety", value: result.ventilation.total + result.safetyAdded, color: "#16A34A" },
   ];
@@ -335,7 +335,7 @@ export default function HeatLoadPage() {
         {/* ── Dark Hero ── */}
         <div className="relative bg-[#0A0A0A] overflow-hidden">
           {/* Glow */}
-          <div className="pointer-events-none absolute -top-40 right-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.15)_0%,transparent_60%)]" />
+          <div className="pointer-events-none absolute -top-40 right-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(0,0,184,0.15)_0%,transparent_60%)]" />
           <div className="max-w-[1200px] mx-auto px-6 py-16 relative z-10">
             <Link
               href="/"
@@ -349,7 +349,7 @@ export default function HeatLoadPage() {
             </Link>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
               <div>
-                <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#2563EB]/15 border border-[#2563EB]/20 text-[#60A5FA] text-[11.5px] font-semibold mb-5">
+                <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#0000B8]/15 border border-[#0000B8]/20 text-[#4040D0] text-[11.5px] font-semibold mb-5">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
                   </svg>
@@ -446,7 +446,7 @@ export default function HeatLoadPage() {
                         onClick={() => update("city", city)}
                         className={`text-left px-4 py-3 rounded-[14px] border transition-all duration-250 cursor-pointer
                           ${form.city === city
-                            ? "bg-[#2563EB] text-white border-[#2563EB] shadow-[0_4px_16px_rgba(37,99,235,0.3)]"
+                            ? "bg-[#0000B8] text-white border-[#0000B8] shadow-[0_4px_16px_rgba(0,0,184,0.3)]"
                             : "bg-[var(--color-bg)] border-[var(--color-border)] hover:border-[var(--color-border-hover)]"
                           }`}
                       >
@@ -458,7 +458,7 @@ export default function HeatLoadPage() {
                       onClick={() => update("city", "Custom")}
                       className={`text-left px-4 py-3 rounded-[14px] border transition-all duration-250 cursor-pointer
                         ${form.city === "Custom"
-                          ? "bg-[#2563EB] text-white border-[#2563EB] shadow-[0_4px_16px_rgba(37,99,235,0.3)]"
+                          ? "bg-[#0000B8] text-white border-[#0000B8] shadow-[0_4px_16px_rgba(0,0,184,0.3)]"
                           : "bg-[var(--color-bg)] border-[var(--color-border)] hover:border-[var(--color-border-hover)] border-dashed"
                         }`}
                     >
@@ -584,7 +584,7 @@ export default function HeatLoadPage() {
                       <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">Roof exposed to direct sun</p>
                       <p className="text-[12.5px] text-[var(--color-text-tertiary)] mt-0.5">Adds sol-air temperature correction (+8°C) to roof load calculation</p>
                     </div>
-                    <div className={`relative w-12 h-7 rounded-full transition-colors duration-300 ${form.roofExposed ? "bg-[#2563EB]" : "bg-[var(--color-surface-raised)] border border-[var(--color-border)]"}`}
+                    <div className={`relative w-12 h-7 rounded-full transition-colors duration-300 ${form.roofExposed ? "bg-[#0000B8]" : "bg-[var(--color-surface-raised)] border border-[var(--color-border)]"}`}
                       onClick={() => update("roofExposed", !form.roofExposed)}>
                       <div className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-sm transition-all duration-300 ${form.roofExposed ? "left-[22px]" : "left-0.5"}`} />
                     </div>
@@ -659,11 +659,11 @@ export default function HeatLoadPage() {
                     step={5}
                     value={form.safetyFactor}
                     onChange={(e) => update("safetyFactor", Number(e.target.value))}
-                    className="w-full accent-[#2563EB] cursor-pointer h-2"
+                    className="w-full accent-[#0000B8] cursor-pointer h-2"
                   />
                   <div className="flex justify-between mt-1.5">
                     {[0, 5, 10, 15, 20, 25, 30].map((v) => (
-                      <span key={v} className={`text-[10px] font-semibold cursor-pointer ${form.safetyFactor === v ? "text-[#2563EB]" : "text-[var(--color-text-tertiary)]"}`}
+                      <span key={v} className={`text-[10px] font-semibold cursor-pointer ${form.safetyFactor === v ? "text-[#0000B8]" : "text-[var(--color-text-tertiary)]"}`}
                         onClick={() => update("safetyFactor", v)}>
                         {v}%
                       </span>
@@ -690,7 +690,7 @@ export default function HeatLoadPage() {
 
               {/* Primary result */}
               <div className="bg-[#111111] rounded-[24px] p-7 text-white relative overflow-hidden">
-                <div className="pointer-events-none absolute -top-16 -right-16 w-[200px] h-[200px] rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.2)_0%,transparent_60%)]" />
+                <div className="pointer-events-none absolute -top-16 -right-16 w-[200px] h-[200px] rounded-full bg-[radial-gradient(circle,rgba(0,0,184,0.2)_0%,transparent_60%)]" />
                 <div className="relative z-10">
                   <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-white/30 mb-1">Estimated Cooling Load</p>
                   <p className="font-[var(--font-display)] text-[52px] font-black tracking-[-0.04em] leading-none mb-1">
@@ -724,7 +724,7 @@ export default function HeatLoadPage() {
                   <DonutChart segments={donutSegments} />
                   <div className="flex-1 space-y-3">
                     {[
-                      { label: "Envelope", pct: envelopePct, color: "#2563EB", detail: "Walls, roof, glass" },
+                      { label: "Envelope", pct: envelopePct, color: "#0000B8", detail: "Walls, roof, glass" },
                       { label: "Internal", pct: internalPct, color: "#F59E0B", detail: "People, lights, equipment" },
                       { label: "Ventilation", pct: ventPct, color: "#16A34A", detail: `+ ${form.safetyFactor}% safety` },
                     ].map((item) => (
@@ -750,10 +750,10 @@ export default function HeatLoadPage() {
                 </h3>
                 <div className="space-y-2.5">
                   {[
-                    { label: "Walls", w: result.envelope.wall, color: "#2563EB" },
-                    { label: "Roof", w: result.envelope.roof, color: "#2563EB" },
-                    { label: "Glass (cond.)", w: result.envelope.glassConduction, color: "#2563EB" },
-                    { label: "Glass (solar)", w: result.envelope.glassSolar, color: "#2563EB" },
+                    { label: "Walls", w: result.envelope.wall, color: "#0000B8" },
+                    { label: "Roof", w: result.envelope.roof, color: "#0000B8" },
+                    { label: "Glass (cond.)", w: result.envelope.glassConduction, color: "#0000B8" },
+                    { label: "Glass (solar)", w: result.envelope.glassSolar, color: "#0000B8" },
                     { label: "People", w: result.internal.people, color: "#F59E0B" },
                     { label: "Lighting", w: result.internal.lighting, color: "#F59E0B" },
                     { label: "Equipment", w: result.internal.equipment, color: "#F59E0B" },
@@ -779,14 +779,14 @@ export default function HeatLoadPage() {
               {/* Recommendation */}
               <div className="bg-[#F0F7FF] border border-[#BFDBFE] rounded-[24px] p-6">
                 <div className="flex gap-3">
-                  <div className="shrink-0 w-8 h-8 rounded-full bg-[#2563EB] flex items-center justify-center text-white mt-0.5">
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-[#0000B8] flex items-center justify-center text-white mt-0.5">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/>
                     </svg>
                   </div>
                   <div>
-                    <p className="text-[11.5px] font-bold uppercase tracking-[0.06em] text-[#2563EB] mb-1">System Recommendation</p>
-                    <p className="text-[13px] text-[#1E40AF] leading-[1.7] font-medium">
+                    <p className="text-[11.5px] font-bold uppercase tracking-[0.06em] text-[#0000B8] mb-1">System Recommendation</p>
+                    <p className="text-[13px] text-[#000080] leading-[1.7] font-medium">
                       {result.tons < 3
                         ? "Split AC (inverter) — ideal for this load. Consider 1–1.5 TR wall-mounted units."
                         : result.tons < 15

@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const tagColors: Record<string, string> = {
   "Energy Saving": "bg-green-50 text-green-700",
-  Technology: "bg-blue-50 text-blue-700",
+  Technology: "bg-[#0000B8]/8 text-[#0000B8]",
   Maintenance: "bg-orange-50 text-orange-700",
   Industry: "bg-violet-50 text-violet-700",
 };
@@ -79,14 +79,14 @@ function renderBlock(block: ContentBlock, i: number) {
           key={i}
           className="my-7 flex gap-4 bg-[#F0F7FF] border border-[#BFDBFE] rounded-[16px] p-5"
         >
-          <div className="shrink-0 w-8 h-8 rounded-full bg-[#2563EB] flex items-center justify-center text-white mt-0.5">
+          <div className="shrink-0 w-8 h-8 rounded-full bg-[#0000B8] flex items-center justify-center text-white mt-0.5">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
           </div>
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.07em] text-[#2563EB] mb-1">{block.label}</p>
-            <p className="text-[14px] text-[#1E40AF] leading-[1.75]">{block.text}</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.07em] text-[#0000B8] mb-1">{block.label}</p>
+            <p className="text-[14px] text-[#000080] leading-[1.75]">{block.text}</p>
           </div>
         </div>
       );
@@ -244,7 +244,7 @@ export default async function BlogDetailPage({ params }: Props) {
                         </div>
                         <div>
                           <p className="text-[12.5px] font-semibold text-[var(--color-text-primary)] leading-snug
-                            transition-colors duration-200 group-hover:text-[#2563EB] line-clamp-2">
+                            transition-colors duration-200 group-hover:text-[#0000B8] line-clamp-2">
                             {rp.title}
                           </p>
                           <p className="text-[11px] text-[var(--color-text-tertiary)] mt-1">{rp.readTime}</p>
