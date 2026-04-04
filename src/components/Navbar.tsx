@@ -75,7 +75,7 @@ export default function Navbar() {
                 hover:bg-[#000096] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(0,0,184,0.25)]"
             >
               Get a Quote
-              <span>→</span>
+              <span className="text-[#FF7F00]">→</span>
             </Link>
 
             {/* Hamburger — mobile only */}
@@ -125,7 +125,7 @@ export default function Navbar() {
                 bg-[#0000B8] text-white text-[15px] font-semibold
                 transition-all duration-300 ease-[var(--ease)] hover:bg-[#000096]"
             >
-              Get a Quote →
+              Get a Quote <span className="text-[#FF7F00]">→</span>
             </Link>
           </div>
         </div>

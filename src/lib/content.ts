@@ -44,6 +44,16 @@ export interface ContactContent {
   hours: string;
 }
 
+export interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  message: string;
+  createdAt: string;
+}
+
 /* ── Defaults ──────────────────────────────────────────────── */
 
 export const defaultHero: HeroContent = {
@@ -243,6 +253,19 @@ export const getServicesContent = () => get<ServiceItem[]>("site:services", defa
 export const getTestimonialsContent = () => get<TestimonialItem[]>("site:testimonials", defaultTestimonials);
 export const getTrustContent = () => get<TrustContent>("site:trust", defaultTrust);
 export const getContactContent = () => get<ContactContent>("site:contact", defaultContact);
+
+/* ── Contact submissions ────────────────────────────────────── */
+
+export const getContactSubmissions = () =>
+  get<ContactSubmission[]>("contact:submissions", []);
+
+export async function saveContactSubmission(submission: ContactSubmission) {
+  const existing = await getContactSubmissions();
+  existing.unshift(submission); // newest first
+  // Keep only the last 200 submissions
+  if (existing.length > 200) existing.length = 200;
+  await redis.set("contact:submissions", existing);
+}
 
 /* ── Blog getters ───────────────────────────────────────────── */
 

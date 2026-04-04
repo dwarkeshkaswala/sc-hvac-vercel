@@ -9,9 +9,13 @@ import {
   type TestimonialItem,
   type TrustContent,
   type ContactContent,
+  type ContactSubmission,
+  saveContactSubmission,
+  getContactSubmissions,
 } from "@/lib/content";
 import { getBlogPosts } from "@/lib/content";
 import type { BlogPost } from "@/lib/blog";
+import { sendContactEmail } from "@/lib/email";
 
 /* ── Auth ────────────────────────────────────────────────────── */
 
@@ -122,4 +126,57 @@ export async function deleteBlogPostAction(slug: string) {
   const posts = await getBlogPosts();
   await saveContent("blog:posts", posts.filter((p) => p.slug !== slug));
   redirect("/admin/blog");
+}
+
+/* ── Contact-form submissions (public) ────────────────────── */
+
+export async function submitContactFormAction(data: {
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  message: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  // Basic server-side validation
+  if (!data.name.trim() || !data.email.trim() || !data.service.trim() || !data.message.trim()) {
+    return { ok: false, error: "Please fill in all required fields." };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(data.email)) {
+    return { ok: false, error: "Please enter a valid email address." };
+  }
+
+  const submission: ContactSubmission = {
+    id: crypto.randomUUID(),
+    name: data.name.trim(),
+    email: data.email.trim(),
+    phone: data.phone.trim(),
+    service: data.service.trim(),
+    message: data.message.trim(),
+    createdAt: new Date().toISOString(),
+  };
+
+  // Save to Redis
+  await saveContactSubmission(submission);
+
+  // Send email (non-blocking — don't fail the form if email fails)
+  try {
+    await sendContactEmail(submission);
+  } catch (err) {
+    console.error("[contact-email] Failed to send:", err);
+  }
+
+  return { ok: true };
+}
+
+/* ── Contact submissions admin ────────────────────────────── */
+
+export async function deleteContactSubmissionAction(id: string) {
+  await requireAdmin();
+  const submissions = await getContactSubmissions();
+  await saveContent(
+    "contact:submissions",
+    submissions.filter((s) => s.id !== id)
+  );
 }

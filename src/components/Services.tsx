@@ -33,7 +33,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
             <div>
               <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
-                <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
+                <span className="w-8 h-px bg-[#FF7F00]" />
                 What we do
               </span>
               <h2 className="font-[var(--font-display)] text-[clamp(30px,3.5vw,44px)] font-bold tracking-[-0.03em] leading-[1.1]">
@@ -67,7 +67,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                   className={`w-full flex items-center gap-4 px-5 py-[18px] text-left
                     transition-colors duration-300 ease-[var(--ease)]
                     ${isOpen
-                      ? "bg-[var(--color-text-primary)]"
+                      ? "bg-[#0000B8]"
                       : "bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)]"
                     }`}
                 >
@@ -147,7 +147,7 @@ export default function Services({ data }: { data?: ServiceItem[] }) {
                 className={`group flex items-center gap-4 px-5 py-4 rounded-[16px] text-left
                   transition-all duration-300 ease-[var(--ease)]
                   ${active === i
-                    ? "bg-[var(--color-text-primary)] text-white shadow-[0_8px_24px_rgba(0,0,0,0.14)]"
+                    ? "bg-[#0000B8] text-white shadow-[0_8px_24px_rgba(0,0,184,0.18)]"
                     : "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
                   }`}
               >

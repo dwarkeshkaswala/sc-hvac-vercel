@@ -25,7 +25,7 @@ export default function Blog() {
         <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-12 ${inView ? "animate-fade-up" : "opacity-0"}`}>
           <div>
             <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
-              <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
+              <span className="w-8 h-px bg-[#FF7F00]" />
               Resources
             </span>
             <h2 className="font-[var(--font-display)] text-[clamp(28px,3.5vw,42px)] font-bold tracking-[-0.03em] leading-[1.1]">

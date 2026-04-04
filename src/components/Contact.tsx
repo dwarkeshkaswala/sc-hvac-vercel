@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { ContactContent } from "@/lib/content";
 import { defaultContact } from "@/lib/content";
+import { submitContactFormAction } from "@/app/admin/actions";
 
 const serviceOptions = [
   "New Installation",
@@ -15,6 +16,10 @@ const serviceOptions = [
 
 export default function Contact({ data }: { data?: ContactContent }) {
   const d = data ?? defaultContact;
+
+  const [formState, setFormState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
   const details = [
     {
@@ -86,7 +91,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
               <div className="flex flex-col gap-6">
                 {details.map((d) => (
                   <div key={d.label} className="flex items-start gap-3.5">
-                    <div className="w-9 h-9 rounded-[6px] bg-[var(--color-surface-raised)] flex items-center justify-center shrink-0 text-[var(--color-text-secondary)]">
+                    <div className="w-9 h-9 rounded-[6px] bg-[rgba(0,0,184,0.07)] flex items-center justify-center shrink-0 text-[#0000B8]">
                       {d.icon}
                     </div>
                     <div>
@@ -106,13 +111,67 @@ export default function Contact({ data }: { data?: ContactContent }) {
 
             {/* Right — Form */}
             <div className="p-14 max-md:p-8 bg-[var(--color-surface-raised)] border-t lg:border-t-0 lg:border-l border-[var(--color-border)]">
-              <form>
+              {formState === "sent" ? (
+                <div className="flex flex-col items-center justify-center text-center py-10 gap-4">
+                  <div className="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-1">Request sent!</h3>
+                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                      We&apos;ll get back to you within 2 hours during business days.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setFormState("idle"); formRef.current?.reset(); }}
+                    className="mt-2 text-[13px] text-[#0000B8] font-medium hover:underline cursor-pointer"
+                  >
+                    Send another request
+                  </button>
+                </div>
+              ) : (
+              <form
+                ref={formRef}
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  setFormState("sending");
+                  setErrorMsg("");
+                  const fd = new FormData(e.currentTarget);
+                  const result = await submitContactFormAction({
+                    name: String(fd.get("name") ?? ""),
+                    email: String(fd.get("email") ?? ""),
+                    phone: String(fd.get("phone") ?? ""),
+                    service: String(fd.get("service") ?? ""),
+                    message: String(fd.get("message") ?? ""),
+                  });
+                  if (result.ok) {
+                    setFormState("sent");
+                  } else {
+                    setFormState("error");
+                    setErrorMsg(result.error ?? "Something went wrong. Please try again.");
+                  }
+                }}
+              >
+                {formState === "error" && (
+                  <div className="mb-4 px-4 py-3 rounded-[10px] bg-red-50 border border-red-200 text-red-700 text-[13px]">
+                    {errorMsg}
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField label="Name" type="text" placeholder="Your name" />
-                  <FormField label="Phone" type="tel" placeholder="+91" />
-                  <div className="sm:col-span-2">
+                  <FormField name="name" label="Name" type="text" placeholder="Your name" required />
+                  <FormField name="email" label="Email *" type="email" placeholder="you@company.com" required />
+                  <FormField name="phone" label="Phone" type="tel" placeholder="+91" />
+                  <div className="sm:col-span-2 sm:col-start-1">
                     <label className="block text-xs font-medium text-[var(--color-text-secondary)] mb-1.5">Service Type</label>
-                    <select className="w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[#0000B8] focus:ring-[3px] focus:ring-[rgba(0,0,184,0.08)] appearance-none bg-[url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2214%22%20height=%2214%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23a3a3a3%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><path%20d=%22M6%209l6%206%206-6%22/></svg>')] bg-no-repeat bg-[right_12px_center] pr-9 cursor-pointer">
+                    <select
+                      name="service"
+                      required
+                      defaultValue=""
+                      className="w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[#0000B8] focus:ring-[3px] focus:ring-[rgba(0,0,184,0.08)] appearance-none bg-[url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2214%22%20height=%2214%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23a3a3a3%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><path%20d=%22M6%209l6%206%206-6%22/></svg>')] bg-no-repeat bg-[right_12px_center] pr-9 cursor-pointer"
+                    >
                       <option value="" disabled>Select a service</option>
                       {serviceOptions.map((o) => (
                         <option key={o}>{o}</option>
@@ -120,19 +179,25 @@ export default function Contact({ data }: { data?: ContactContent }) {
                     </select>
                   </div>
                   <div className="sm:col-span-2">
-                    <FormField label="Message" type="textarea" placeholder="Tell us about your requirement..." />
+                    <FormField name="message" label="Message" type="textarea" placeholder="Tell us about your requirement..." required />
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="w-full mt-5 inline-flex items-center justify-center gap-2 h-11 rounded-full bg-[#0000B8] text-white text-[13px] font-medium transition-all duration-400 ease-[var(--ease)] hover:bg-[#000096] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(0,0,184,0.25)] cursor-pointer"
+                  disabled={formState === "sending"}
+                  className="w-full mt-5 inline-flex items-center justify-center gap-2 h-11 rounded-full bg-[#0000B8] text-white text-[13px] font-medium transition-all duration-400 ease-[var(--ease)] hover:bg-[#000096] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(0,0,184,0.25)] cursor-pointer disabled:opacity-60 disabled:pointer-events-none"
                 >
-                  Send Request <span>→</span>
+                  {formState === "sending" ? (
+                    <>Sending…</>
+                  ) : (
+                    <>Send Request <span className="text-[#FF7F00]">→</span></>
+                  )}
                 </button>
                 <p className="text-[11px] text-[var(--color-text-tertiary)] mt-3.5 text-center leading-snug">
                   By submitting, you agree to the processing of your personal data.
                 </p>
               </form>
+              )}
             </div>
           </div>
 
@@ -154,7 +219,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
   );
 }
 
-function FormField({ label, type, placeholder }: { label: string; type: string; placeholder: string }) {
+function FormField({ name, label, type, placeholder, required }: { name: string; label: string; type: string; placeholder: string; required?: boolean }) {
   const baseClass =
     "w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[#0000B8] focus:ring-[3px] focus:ring-[rgba(0,0,184,0.08)]";
 
@@ -162,9 +227,9 @@ function FormField({ label, type, placeholder }: { label: string; type: string; 
     <div>
       <label className="block text-xs font-medium text-[var(--color-text-secondary)] mb-1.5">{label}</label>
       {type === "textarea" ? (
-        <textarea rows={4} placeholder={placeholder} className={baseClass} />
+        <textarea name={name} rows={4} placeholder={placeholder} required={required} className={baseClass} />
       ) : (
-        <input type={type} placeholder={placeholder} className={baseClass} />
+        <input name={name} type={type} placeholder={placeholder} required={required} className={baseClass} />
       )}
     </div>
   );

@@ -31,7 +31,7 @@ export default function Trust({ data }: { data?: TrustContent }) {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
             <div>
               <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
-                <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
+                <span className="w-8 h-px bg-[#0000B8]" />
                 Why Shreeji
               </span>
               <h2 className="font-[var(--font-display)] text-[clamp(30px,3.5vw,44px)] font-bold tracking-[-0.03em] leading-[1.1]">
@@ -89,7 +89,7 @@ export default function Trust({ data }: { data?: TrustContent }) {
                 <div className="relative">
                   <div className="w-10 h-10 rounded-[10px] bg-[var(--color-surface-raised)] border border-[var(--color-border)]
                     flex items-center justify-center mb-4 text-[var(--color-text-secondary)]
-                    transition-all duration-300 group-hover:bg-[#111111] group-hover:text-white group-hover:border-transparent">
+                    transition-all duration-300 group-hover:bg-[#0000B8] group-hover:text-white group-hover:border-transparent">
                     {PILLAR_ICONS[pillars.indexOf(p) % PILLAR_ICONS.length]}
                   </div>
                   <h3 className="font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text-primary)] tracking-[-0.015em] mb-1.5">

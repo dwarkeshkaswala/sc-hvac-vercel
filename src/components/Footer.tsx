@@ -39,7 +39,7 @@ export default function Footer() {
                   <li key={link}>
                     <Link
                       href="#"
-                      className="text-[13px] text-[var(--color-text-tertiary)] transition-colors duration-200 hover:text-[var(--color-text-primary)]"
+                      className="text-[13px] text-[var(--color-text-tertiary)] transition-colors duration-200 hover:text-[#0000B8]"
                     >
                       {link}
                     </Link>
@@ -54,8 +54,8 @@ export default function Footer() {
         <div className="border-t border-[var(--color-border)] pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-[var(--color-text-tertiary)]">
           <span>© 2026 Shreeji HVAC. All rights reserved.</span>
           <div className="flex gap-5">
-            <Link href="#" className="transition-colors hover:text-[var(--color-text-primary)]">Privacy</Link>
-            <Link href="#" className="transition-colors hover:text-[var(--color-text-primary)]">Terms</Link>
+            <Link href="#" className="transition-colors hover:text-[#0000B8]">Privacy</Link>
+            <Link href="#" className="transition-colors hover:text-[#0000B8]">Terms</Link>
           </div>
         </div>
       </div>
