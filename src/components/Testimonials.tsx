@@ -241,7 +241,7 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
                         isAnimating.current = true;
                         setActive(i);
                       }}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${active === i ? "w-5 bg-[var(--color-text-primary)]" : "w-1.5 bg-[var(--color-border-hover)]"}`}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${active === i ? "w-5 bg-[#0000B8]" : "w-1.5 bg-[var(--color-border-hover)]"}`}
                       aria-label={`Go to testimonial ${i + 1}`}
                     />
                   ))}

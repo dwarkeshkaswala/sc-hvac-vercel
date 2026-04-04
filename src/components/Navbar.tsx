@@ -70,9 +70,9 @@ export default function Navbar() {
             <Link
               href="#contact"
               className="hidden sm:inline-flex items-center gap-2 h-[44px] sm:h-[50px] px-5 sm:px-7 rounded-full whitespace-nowrap
-                bg-[var(--color-text-primary)] text-white text-[14px] sm:text-[15px] font-semibold
+                bg-[#0000B8] text-white text-[14px] sm:text-[15px] font-semibold
                 transition-all duration-300 ease-[var(--ease)]
-                hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
+                hover:bg-[#000096] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(0,0,184,0.25)]"
             >
               Get a Quote
               <span>→</span>
@@ -122,8 +122,8 @@ export default function Navbar() {
               href="#contact"
               onClick={() => setOpen(false)}
               className="mt-2 flex items-center justify-center gap-2 h-[50px] rounded-full
-                bg-[var(--color-text-primary)] text-white text-[15px] font-semibold
-                transition-all duration-300 ease-[var(--ease)]"
+                bg-[#0000B8] text-white text-[15px] font-semibold
+                transition-all duration-300 ease-[var(--ease)] hover:bg-[#000096]"
             >
               Get a Quote →
             </Link>

@@ -56,9 +56,9 @@ export default function Hero({ data }: { data?: HeroContent }) {
             <Link
               href="#contact"
               className="inline-flex items-center gap-2 h-12 px-6 rounded-full
-                         bg-[var(--color-text-primary)] text-white text-[13.5px] font-semibold
+                         bg-[#0000B8] text-white text-[13.5px] font-semibold
                          transition-all duration-400 ease-[var(--ease)]
-                         hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,0,0,0.18)]"
+                         hover:bg-[#000096] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,0,184,0.3)]"
             >
               Start a Project
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

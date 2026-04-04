@@ -14,13 +14,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 max-sm:gap-8 mb-12">
           {/* Brand */}
           <div>
-            <Link href="#" className="flex items-center shrink-0 mb-4">
+            <Link href="/" className="flex items-center shrink-0 mb-4">
               <Image
-                src="/logo.png"
+                src="/logo with contact.svg"
                 alt="Shreeji HVAC & R Trading LLP"
-                width={160}
-                height={32}
-                className="h-7 w-auto object-contain"
+                width={200}
+                height={40}
+                className="h-8 w-auto object-contain"
               />
             </Link>
             <p className="text-[13px] text-[var(--color-text-tertiary)] max-w-[260px] mt-3.5 leading-[1.65]">

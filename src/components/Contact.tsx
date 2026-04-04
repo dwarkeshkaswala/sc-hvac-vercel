@@ -112,7 +112,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                   <FormField label="Phone" type="tel" placeholder="+91" />
                   <div className="sm:col-span-2">
                     <label className="block text-xs font-medium text-[var(--color-text-secondary)] mb-1.5">Service Type</label>
-                    <select className="w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[var(--color-text-primary)] focus:ring-[3px] focus:ring-[var(--color-accent-subtle)] appearance-none bg-[url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2214%22%20height=%2214%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23a3a3a3%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><path%20d=%22M6%209l6%206%206-6%22/></svg>')] bg-no-repeat bg-[right_12px_center] pr-9 cursor-pointer">
+                    <select className="w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[#0000B8] focus:ring-[3px] focus:ring-[rgba(0,0,184,0.08)] appearance-none bg-[url('data:image/svg+xml;utf8,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2214%22%20height=%2214%22%20viewBox=%220%200%2024%2024%22%20fill=%22none%22%20stroke=%22%23a3a3a3%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22><path%20d=%22M6%209l6%206%206-6%22/></svg>')] bg-no-repeat bg-[right_12px_center] pr-9 cursor-pointer">
                       <option value="" disabled>Select a service</option>
                       {serviceOptions.map((o) => (
                         <option key={o}>{o}</option>
@@ -125,7 +125,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
                 </div>
                 <button
                   type="submit"
-                  className="w-full mt-5 inline-flex items-center justify-center gap-2 h-11 rounded-full bg-[var(--color-text-primary)] text-white text-[13px] font-medium transition-all duration-400 ease-[var(--ease)] hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] cursor-pointer"
+                  className="w-full mt-5 inline-flex items-center justify-center gap-2 h-11 rounded-full bg-[#0000B8] text-white text-[13px] font-medium transition-all duration-400 ease-[var(--ease)] hover:bg-[#000096] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(0,0,184,0.25)] cursor-pointer"
                 >
                   Send Request <span>→</span>
                 </button>
@@ -156,7 +156,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
 
 function FormField({ label, type, placeholder }: { label: string; type: string; placeholder: string }) {
   const baseClass =
-    "w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[var(--color-text-primary)] focus:ring-[3px] focus:ring-[var(--color-accent-subtle)]";
+    "w-full px-3.5 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[10px] text-[13px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] transition-all duration-250 ease-[var(--ease)] focus:outline-none focus:border-[#0000B8] focus:ring-[3px] focus:ring-[rgba(0,0,184,0.08)]";
 
   return (
     <div>
