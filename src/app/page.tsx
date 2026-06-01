@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Products from "@/components/Products";
+import AuthorizedDealers from "@/components/AuthorizedDealers";
 import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
 import Blog from "@/components/Blog";
@@ -33,6 +34,7 @@ export default async function Home() {
         <Hero data={hero} />
         <Services data={services} />
         <Products />
+        <AuthorizedDealers />
         <Portfolio />
         <Testimonials data={testimonials} />
         <Blog />
