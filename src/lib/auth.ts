@@ -1,6 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { redis } from "./redis";
+import { createHash } from "crypto";
 
 const COOKIE = "admin_token";
 
@@ -38,9 +40,18 @@ export async function requireAdmin() {
 }
 
 export async function adminLogin(email: string, password: string): Promise<boolean> {
-  const ok =
-    email === process.env.ADMIN_EMAIL &&
-    password === process.env.ADMIN_PASSWORD;
+  // Check for Redis-stored password override
+  const storedHash = await redis.get<string>("admin:password_hash");
+
+  let ok: boolean;
+  if (storedHash) {
+    // Verify against stored hash
+    const inputHash = hashPassword(password);
+    ok = email === process.env.ADMIN_EMAIL && inputHash === storedHash;
+  } else {
+    // Fallback to env var
+    ok = email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD;
+  }
 
   if (!ok) return false;
 
@@ -57,4 +68,35 @@ export async function adminLogin(email: string, password: string): Promise<boole
 
 export async function adminLogout() {
   (await cookies()).delete(COOKIE);
+}
+
+/* ── Password management ─────────────────────────────────────── */
+
+function hashPassword(password: string): string {
+  return createHash("sha256").update(password).digest("hex");
+}
+
+export async function changeAdminPassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ ok: boolean; error?: string }> {
+  // Verify current password
+  const storedHash = await redis.get<string>("admin:password_hash");
+
+  if (storedHash) {
+    const inputHash = hashPassword(currentPassword);
+    if (inputHash !== storedHash) {
+      return { ok: false, error: "Current password is incorrect." };
+    }
+  } else {
+    // Check against env var
+    if (currentPassword !== process.env.ADMIN_PASSWORD) {
+      return { ok: false, error: "Current password is incorrect." };
+    }
+  }
+
+  // Store new password hash in Redis
+  const newHash = hashPassword(newPassword);
+  await redis.set("admin:password_hash", newHash);
+  return { ok: true };
 }

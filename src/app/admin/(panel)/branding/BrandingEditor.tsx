@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { BrandingContent } from "@/lib/content";
+import { defaultBranding } from "@/lib/content";
 import { saveBrandingAction } from "@/app/admin/actions";
 import MediaPicker from "@/components/MediaPicker";
 
@@ -107,7 +108,15 @@ export default function BrandingEditor({ initial, saved }: Props) {
       </Section>
 
       {/* Colors */}
-      <Section title="Site Colors">
+      <Section title="Site Colors" action={
+        <button
+          type="button"
+          onClick={() => setD((prev) => ({ ...prev, colors: { ...defaultBranding.colors } }))}
+          className="text-[11px] font-semibold text-[#0000B8] hover:underline"
+        >
+          Reset to Default
+        </button>
+      }>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <ColorField label="Primary" value={d.colors.primary} onChange={(v) => setColor("primary", v)} />
           <ColorField label="Primary Dark" value={d.colors.primaryDark} onChange={(v) => setColor("primaryDark", v)} />
@@ -165,10 +174,13 @@ export default function BrandingEditor({ initial, saved }: Props) {
 
 /* ── Helpers ─── */
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, action }: { title: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
     <div className="bg-white rounded-[16px] border border-[#E5E7EB] p-5 mb-5">
-      <h2 className="text-[14px] font-bold text-[#111] mb-4">{title}</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-[14px] font-bold text-[#111]">{title}</h2>
+        {action}
+      </div>
       {children}
     </div>
   );

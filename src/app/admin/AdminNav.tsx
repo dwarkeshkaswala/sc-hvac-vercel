@@ -8,13 +8,16 @@ import { logoutAction } from "./actions";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: "◈" },
   { label: "Hero", href: "/admin/hero", icon: "◉" },
+  { label: "Navbar", href: "/admin/navbar", icon: "☰" },
   { label: "Services", href: "/admin/services", icon: "⊞" },
   { label: "Testimonials", href: "/admin/testimonials", icon: "◎" },
   { label: "Trust / Why Us", href: "/admin/trust", icon: "◇" },
   { label: "Contact", href: "/admin/contact", icon: "◌" },
+  { label: "Dealers", href: "/admin/dealers", icon: "⊕" },
   { label: "Blog", href: "/admin/blog", icon: "≡" },
   { label: "Media", href: "/admin/media", icon: "▣" },
   { label: "Branding", href: "/admin/branding", icon: "◐" },
+  { label: "Settings", href: "/admin/settings", icon: "⚙" },
 ];
 
 export default function AdminNav() {
@@ -42,7 +45,7 @@ export default function AdminNav() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 flex flex-col gap-0.5">
+      <nav className="flex-1 py-4 px-3 flex flex-col gap-0.5 overflow-y-auto">
         {navItems.map(({ label, href, icon }) => {
           const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
           return (
@@ -113,11 +116,11 @@ export default function AdminNav() {
         />
       )}
 
-      {/* Sidebar — fixed drawer on mobile, static on desktop */}
+      {/* Sidebar — fixed drawer on mobile, sticky on desktop */}
       <aside
         className={`
-          fixed md:relative z-50 md:z-auto
-          w-[220px] shrink-0 min-h-screen bg-[#111111] flex flex-col
+          fixed md:sticky md:top-0 z-50 md:z-auto
+          w-[220px] shrink-0 h-screen bg-[#111111] flex flex-col
           transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
           ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}

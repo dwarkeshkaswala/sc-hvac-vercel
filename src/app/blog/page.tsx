@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getBlogPosts } from "@/lib/content";
+import { getBlogPosts, getNavbarContent } from "@/lib/content";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -19,12 +19,12 @@ const tagColors: Record<string, string> = {
 };
 
 export default async function BlogListPage() {
-  const posts = await getBlogPosts();
+  const [posts, navbar] = await Promise.all([getBlogPosts(), getNavbarContent()]);
   const [featured, ...rest] = posts;
 
   return (
     <>
-      <Navbar />
+      <Navbar data={navbar} />
       <main className="bg-[var(--color-bg)] min-h-screen pt-[104px]">
 
         {/* ── Page Header ── */}

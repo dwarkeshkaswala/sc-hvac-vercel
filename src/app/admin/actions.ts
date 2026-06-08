@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { adminLogin, adminLogout, requireAdmin } from "@/lib/auth";
+import { adminLogin, adminLogout, requireAdmin, changeAdminPassword } from "@/lib/auth";
 import {
   saveContent,
   type HeroContent,
@@ -11,6 +11,8 @@ import {
   type ContactContent,
   type ContactSubmission,
   type BrandingContent,
+  type DealersContent,
+  type NavbarContent,
   saveContactSubmission,
   getContactSubmissions,
 } from "@/lib/content";
@@ -31,6 +33,17 @@ export async function loginAction(formData: FormData) {
 export async function logoutAction() {
   await adminLogout();
   redirect("/admin/login");
+}
+
+export async function changePasswordAction(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ ok: boolean; error?: string }> {
+  await requireAdmin();
+  if (newPassword.length < 6) {
+    return { ok: false, error: "New password must be at least 6 characters." };
+  }
+  return changeAdminPassword(currentPassword, newPassword);
 }
 
 /* ── Hero ────────────────────────────────────────────────────── */
@@ -113,6 +126,20 @@ export async function saveTrustAction(data: TrustContent) {
 export async function saveBrandingAction(data: BrandingContent) {
   await requireAdmin();
   await saveContent("site:branding", data);
+}
+
+/* ── Dealers ─────────────────────────────────────────────────── */
+
+export async function saveDealersAction(data: DealersContent) {
+  await requireAdmin();
+  await saveContent("site:dealers", data);
+}
+
+/* ── Navbar ──────────────────────────────────────────────────── */
+
+export async function saveNavbarAction(data: NavbarContent) {
+  await requireAdmin();
+  await saveContent("site:navbar", data);
 }
 
 /* ── Blog ────────────────────────────────────────────────────── */

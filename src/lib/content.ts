@@ -61,6 +61,35 @@ export interface BrandingContent {
   };
 }
 
+export interface DealerItem {
+  id: string;
+  name: string;
+  logo: string;
+  description: string;
+  tags: string[];
+  accentColor: string;
+}
+
+export interface DealersContent {
+  heading: string;
+  subheading: string;
+  dealers: DealerItem[];
+  trustIndicators: { value: string; label: string }[];
+}
+
+export interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+export interface NavbarContent {
+  items: NavItem[];
+  ctaLabel: string;
+  ctaHref: string;
+}
+
 export interface ContactSubmission {
   id: string;
   name: string;
@@ -269,6 +298,50 @@ export const defaultBranding: BrandingContent = {
   },
 };
 
+export const defaultDealers: DealersContent = {
+  heading: "Authorised Dealers of",
+  subheading:
+    "We are proud authorised dealers of Toshiba and Carrier — delivering genuine products, certified installation, and manufacturer-backed warranty.",
+  dealers: [
+    {
+      id: "toshiba",
+      name: "Toshiba",
+      logo: "/toshiba-logo.svg",
+      description:
+        "Authorised dealer for Toshiba HVAC systems — VRF solutions, multi-split systems, and commercial air conditioning with Japanese engineering excellence.",
+      tags: ["VRF Systems", "Multi-Split", "Commercial AC"],
+      accentColor: "#E31837",
+    },
+    {
+      id: "carrier",
+      name: "Carrier",
+      logo: "/carrier-logo.svg",
+      description:
+        "Authorised dealer for Carrier — the world leader in heating, air conditioning, and refrigeration solutions for residential and commercial spaces.",
+      tags: ["Ducted Systems", "Chillers", "AHU"],
+      accentColor: "#0055A4",
+    },
+  ],
+  trustIndicators: [
+    { value: "100%", label: "Genuine Products" },
+    { value: "Certified", label: "Installation Team" },
+    { value: "Full", label: "Manufacturer Warranty" },
+  ],
+};
+
+export const defaultNavbar: NavbarContent = {
+  items: [
+    { id: "home", label: "Home", href: "/" },
+    { id: "services", label: "Services", href: "/#services" },
+    { id: "blog", label: "Blog", href: "/blog" },
+    { id: "why-us", label: "Why Us", href: "/#why-us" },
+    { id: "calculator", label: "Calculator", href: "/tools/heat-load-calculator" },
+    { id: "shop", label: "Shop", href: "https://shop.shreejihvac.com", external: true },
+  ],
+  ctaLabel: "Get a Quote",
+  ctaHref: "#contact",
+};
+
 /* ── Generic Redis getter with fallback ─────────────────────── */
 
 async function get<T>(key: string, fallback: T): Promise<T> {
@@ -288,6 +361,8 @@ export const getTestimonialsContent = () => get<TestimonialItem[]>("site:testimo
 export const getTrustContent = () => get<TrustContent>("site:trust", defaultTrust);
 export const getContactContent = () => get<ContactContent>("site:contact", defaultContact);
 export const getBrandingContent = () => get<BrandingContent>("site:branding", defaultBranding);
+export const getDealersContent = () => get<DealersContent>("site:dealers", defaultDealers);
+export const getNavbarContent = () => get<NavbarContent>("site:navbar", defaultNavbar);
 
 /* ── Contact submissions ────────────────────────────────────── */
 

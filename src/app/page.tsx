@@ -16,25 +16,29 @@ import {
   getTestimonialsContent,
   getTrustContent,
   getContactContent,
+  getDealersContent,
+  getNavbarContent,
 } from "@/lib/content";
 
 export default async function Home() {
-  const [hero, services, testimonials, trust, contact] = await Promise.all([
+  const [hero, services, testimonials, trust, contact, dealers, navbar] = await Promise.all([
     getHeroContent(),
     getServicesContent(),
     getTestimonialsContent(),
     getTrustContent(),
     getContactContent(),
+    getDealersContent(),
+    getNavbarContent(),
   ]);
 
   return (
     <>
-      <Navbar />
+      <Navbar data={navbar} />
       <main>
         <Hero data={hero} />
         <Services data={services} />
         <Products />
-        <AuthorizedDealers />
+        <AuthorizedDealers data={dealers} />
         <Portfolio />
         <Testimonials data={testimonials} />
         <Blog />

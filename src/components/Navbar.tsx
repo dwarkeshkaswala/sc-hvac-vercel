@@ -3,17 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import type { NavbarContent } from "@/lib/content";
+import { defaultNavbar } from "@/lib/content";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/#services" },
-  { label: "Blog", href: "/blog" },
-  { label: "Why Us", href: "/#why-us" },
-  { label: "Calculator", href: "/tools/heat-load-calculator" },
-  { label: "Shop", href: "https://shop.shreejihvac.com" },
-];
-
-export default function Navbar() {
+export default function Navbar({ data = defaultNavbar }: { data?: NavbarContent }) {
   const [open, setOpen] = useState(false);
 
   // Close on Escape
@@ -54,10 +47,11 @@ export default function Navbar() {
 
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map(({ label, href }) => (
+            {data.items.map(({ id, label, href, external }) => (
               <Link
-                key={label}
+                key={id}
                 href={href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="text-[15px] font-semibold text-[var(--color-text-primary)] px-4 py-2 rounded-full whitespace-nowrap
                   transition-all duration-250 ease-[var(--ease)] hover:text-[#FF7F00] hover:bg-[var(--color-orange-subtle)]"
               >
@@ -69,13 +63,13 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {/* Desktop CTA */}
             <Link
-              href="#contact"
+              href={data.ctaHref}
               className="hidden sm:inline-flex items-center gap-2 h-[44px] sm:h-[50px] px-5 sm:px-7 rounded-full whitespace-nowrap
                 bg-[#0000B8] text-white text-[14px] sm:text-[15px] font-semibold
                 transition-all duration-300 ease-[var(--ease)]
                 hover:bg-[#FF7F00] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,127,0,0.35)]"
             >
-              Get a Quote
+              {data.ctaLabel}
               <span>→</span>
             </Link>
 
@@ -108,10 +102,11 @@ export default function Navbar() {
             }`}
         >
           <div className="px-4 py-4 flex flex-col gap-1">
-            {navItems.map(({ label, href }) => (
+            {data.items.map(({ id, label, href, external }) => (
               <Link
-                key={label}
+                key={id}
                 href={href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 onClick={() => setOpen(false)}
                 className="text-[15px] font-semibold text-[var(--color-text-primary)] px-4 py-3 rounded-[12px]
                   hover:bg-[var(--color-orange-subtle)] hover:text-[#FF7F00] transition-all duration-200"
@@ -120,13 +115,13 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              href="#contact"
+              href={data.ctaHref}
               onClick={() => setOpen(false)}
               className="mt-2 flex items-center justify-center gap-2 h-[50px] rounded-full
                 bg-[#0000B8] text-white text-[15px] font-semibold
                 transition-all duration-300 ease-[var(--ease)] hover:bg-[#FF7F00]"
             >
-              Get a Quote →
+              {data.ctaLabel} →
             </Link>
           </div>
         </div>

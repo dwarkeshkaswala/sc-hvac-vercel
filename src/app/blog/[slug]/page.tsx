@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import type { ContentBlock } from "@/lib/blog";
-import { getBlogPosts, getBlogPost } from "@/lib/content";
+import { getBlogPosts, getBlogPost, getNavbarContent } from "@/lib/content";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -100,10 +100,11 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const allPosts = await getBlogPosts();
   const related = allPosts.filter((p) => p.slug !== slug).slice(0, 2);
+  const navbar = await getNavbarContent();
 
   return (
     <>
-      <Navbar />
+      <Navbar data={navbar} />
       <main className="bg-[var(--color-bg)] min-h-screen pt-[104px]">
 
         {/* ── Hero image ── */}
