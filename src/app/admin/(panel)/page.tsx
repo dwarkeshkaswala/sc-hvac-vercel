@@ -9,6 +9,7 @@ const sections = [
   { label: "Contact Info", href: "/admin/contact", desc: "Phone, email, address, hours" },
   { label: "Blog Posts", href: "/admin/blog", desc: "Create, edit, delete articles" },
   { label: "Media Files", href: "/admin/media", desc: "Upload and manage images, videos, documents" },
+  { label: "Branding", href: "/admin/branding", desc: "Logo, favicon, colors, site identity" },
 ];
 
 export default async function AdminDashboard() {

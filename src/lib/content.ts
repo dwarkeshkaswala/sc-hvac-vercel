@@ -44,6 +44,23 @@ export interface ContactContent {
   hours: string;
 }
 
+export interface BrandingContent {
+  siteName: string;
+  tagline: string;
+  logo: string;
+  logoDark: string;
+  favicon: string;
+  ogImage: string;
+  colors: {
+    primary: string;
+    primaryDark: string;
+    accent: string;
+    background: string;
+    text: string;
+    muted: string;
+  };
+}
+
 export interface ContactSubmission {
   id: string;
   name: string;
@@ -235,6 +252,23 @@ export const defaultContact: ContactContent = {
   hours: "Mon – Sat: 09:00 – 19:00",
 };
 
+export const defaultBranding: BrandingContent = {
+  siteName: "Shreeji Cooling",
+  tagline: "Precision climate engineering",
+  logo: "",
+  logoDark: "",
+  favicon: "",
+  ogImage: "",
+  colors: {
+    primary: "#0000B8",
+    primaryDark: "#000096",
+    accent: "#3B82F6",
+    background: "#FFFFFF",
+    text: "#111111",
+    muted: "#666666",
+  },
+};
+
 /* ── Generic Redis getter with fallback ─────────────────────── */
 
 async function get<T>(key: string, fallback: T): Promise<T> {
@@ -253,6 +287,7 @@ export const getServicesContent = () => get<ServiceItem[]>("site:services", defa
 export const getTestimonialsContent = () => get<TestimonialItem[]>("site:testimonials", defaultTestimonials);
 export const getTrustContent = () => get<TrustContent>("site:trust", defaultTrust);
 export const getContactContent = () => get<ContactContent>("site:contact", defaultContact);
+export const getBrandingContent = () => get<BrandingContent>("site:branding", defaultBranding);
 
 /* ── Contact submissions ────────────────────────────────────── */
 

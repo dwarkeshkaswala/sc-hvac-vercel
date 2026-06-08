@@ -10,6 +10,7 @@ import {
   type TrustContent,
   type ContactContent,
   type ContactSubmission,
+  type BrandingContent,
   saveContactSubmission,
   getContactSubmissions,
 } from "@/lib/content";
@@ -105,6 +106,13 @@ export async function saveTestimonialsAction(data: TestimonialItem[]) {
 export async function saveTrustAction(data: TrustContent) {
   await requireAdmin();
   await saveContent("site:trust", data);
+}
+
+/* ── Branding ────────────────────────────────────────────────── */
+
+export async function saveBrandingAction(data: BrandingContent) {
+  await requireAdmin();
+  await saveContent("site:branding", data);
 }
 
 /* ── Blog ────────────────────────────────────────────────────── */

@@ -14,6 +14,7 @@ const navItems = [
   { label: "Contact", href: "/admin/contact", icon: "◌" },
   { label: "Blog", href: "/admin/blog", icon: "≡" },
   { label: "Media", href: "/admin/media", icon: "▣" },
+  { label: "Branding", href: "/admin/branding", icon: "◐" },
 ];
 
 export default function AdminNav() {
