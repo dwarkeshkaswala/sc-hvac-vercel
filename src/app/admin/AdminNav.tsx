@@ -13,6 +13,7 @@ const navItems = [
   { label: "Trust / Why Us", href: "/admin/trust", icon: "◇" },
   { label: "Contact", href: "/admin/contact", icon: "◌" },
   { label: "Blog", href: "/admin/blog", icon: "≡" },
+  { label: "Media", href: "/admin/media", icon: "▣" },
 ];
 
 export default function AdminNav() {
