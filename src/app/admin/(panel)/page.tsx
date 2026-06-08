@@ -8,6 +8,7 @@ const sections = [
   { label: "Trust / Why Us", href: "/admin/trust", desc: "Stats and pillar cards" },
   { label: "Contact Info", href: "/admin/contact", desc: "Phone, email, address, hours" },
   { label: "Blog Posts", href: "/admin/blog", desc: "Create, edit, delete articles" },
+  { label: "Media Files", href: "/admin/media", desc: "Upload and manage images, videos, documents" },
 ];
 
 export default async function AdminDashboard() {

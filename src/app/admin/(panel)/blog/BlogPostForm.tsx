@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { BlogPost, ContentBlock } from "@/lib/blog";
 import { saveBlogPostAction } from "@/app/admin/actions";
+import MediaPicker from "@/components/MediaPicker";
 
 interface Props {
   initial: BlogPost;
@@ -156,8 +157,13 @@ export default function BlogPostForm({ initial, isNew }: Props) {
           <textarea className={ta} rows={2} placeholder="Short description shown in listing" value={post.excerpt} onChange={(e) => set("excerpt", e.target.value)} />
         </div>
         <div>
-          <label className={lbl}>Cover image URL</label>
-          <input className={inp} placeholder="https://..." value={post.image} onChange={(e) => set("image", e.target.value)} />
+          <MediaPicker
+            value={post.image}
+            onChange={(url) => set("image", url)}
+            label="Cover Image"
+            dimensions="1200 × 630"
+            aspectRatio="1.91:1"
+          />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>

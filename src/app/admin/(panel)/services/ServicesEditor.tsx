@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { ServiceItem } from "@/lib/content";
 import { saveServicesAction } from "@/app/admin/actions";
 import { PreviewShell } from "../hero/HeroEditor";
+import MediaPicker from "@/components/MediaPicker";
 
 interface Props { initial: ServiceItem[]; saved: boolean }
 
@@ -109,11 +110,12 @@ export default function ServicesEditor({ initial, saved }: Props) {
                 onChange={(e) => update(si, "desc", e.target.value)}
               />
 
-              <input
-                className={`${inp} mb-4`}
-                placeholder="Image URL (e.g. /images/ac.jpg)"
+              <MediaPicker
                 value={svc.image ?? ""}
-                onChange={(e) => update(si, "image", e.target.value)}
+                onChange={(url) => update(si, "image", url)}
+                label="Service Image"
+                dimensions="1200 × 800"
+                aspectRatio="3:2"
               />
 
               <div className="mb-1">

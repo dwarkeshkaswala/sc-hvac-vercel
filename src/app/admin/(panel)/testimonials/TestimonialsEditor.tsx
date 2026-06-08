@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { TestimonialItem } from "@/lib/content";
 import { saveTestimonialsAction } from "@/app/admin/actions";
 import { PreviewShell } from "../hero/HeroEditor";
+import MediaPicker from "@/components/MediaPicker";
 
 interface Props { initial: TestimonialItem[]; saved: boolean }
 
@@ -79,7 +80,13 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
               </div>
 
               <div className="grid grid-cols-2 gap-3 mb-3">
-                <input className={inp} placeholder="Photo URL" value={t.photo} onChange={(e) => update(i, "photo", e.target.value)} />
+                <MediaPicker
+                  value={t.photo}
+                  onChange={(url) => update(i, "photo", url)}
+                  label="Photo"
+                  dimensions="200 × 200"
+                  aspectRatio="1:1"
+                />
                 <div className="flex gap-2 items-center">
                   <input className={`${inp} flex-1`} placeholder="Accent color (#hex)" value={t.accent} onChange={(e) => update(i, "accent", e.target.value)} />
                   <div className="w-[38px] h-[38px] rounded-[8px] border border-[#E5E7EB] shrink-0" style={{ background: t.accent }} />
