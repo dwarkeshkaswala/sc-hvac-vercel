@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getProductsContent, getNavbarContent } from "@/lib/content";
+import { getProductsContent, getNavbarContent, slugify } from "@/lib/content";
 
 export const metadata = {
   title: "Products | Shreeji HVAC & R Trading LLP",
@@ -87,7 +87,7 @@ export default async function ProductsPage() {
               {products.items.filter(p => parseInt(p.id) <= 12).map((product) => (
                 <Link
                   key={product.id}
-                  href={`/products/${product.title.toLowerCase().replace(/\s+/g, "-")}`}
+                  href={`/products/${slugify(product.title)}`}
                   className="group relative rounded-[20px] overflow-hidden bg-white border border-[var(--color-border)] shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-1"
                 >
                   {/* Image */}
@@ -176,7 +176,7 @@ export default async function ProductsPage() {
                   {products.items.filter(p => parseInt(p.id) > 12).map((product) => (
                     <Link
                       key={product.id}
-                      href={`/products/${product.title.toLowerCase().replace(/\s+/g, "-")}`}
+                      href={`/products/${slugify(product.title)}`}
                       className="group relative rounded-[20px] overflow-hidden bg-white border border-[var(--color-border)] shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-1"
                     >
                       <div className="relative h-[220px] sm:h-[240px] overflow-hidden">

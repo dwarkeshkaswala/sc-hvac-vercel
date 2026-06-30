@@ -2,6 +2,16 @@ import { redis } from "./redis";
 import type { BlogPost } from "./blog";
 import { posts as hardcodedPosts } from "./blog";
 
+/* ── Slug helper ───────────────────────────────────────────── */
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 /* ── Shared types ──────────────────────────────────────────── */
 
 export interface HeroContent {
@@ -403,7 +413,7 @@ export const defaultNavbar: NavbarContent = {
     { id: "home", label: "Home", href: "/" },
     { id: "services", label: "Services", href: "/#services" },
     { id: "products", label: "Products", href: "/products", children: [
-      { id: "grilles", label: "Grilles & Registers", href: "/products/grilles-&-registers" },
+      { id: "grilles", label: "Grilles & Registers", href: "/products/grilles-and-registers" },
       { id: "diffusers", label: "Diffusers", href: "/products/diffusers" },
       { id: "vav", label: "VAV Terminal Units", href: "/products/vav-terminal-units" },
       { id: "louvers", label: "Louvers", href: "/products/louvers" },
@@ -413,7 +423,7 @@ export const defaultNavbar: NavbarContent = {
       { id: "ufad", label: "Under Floor Air Distribution", href: "/products/under-floor-air-distribution" },
       { id: "nozzles", label: "Nozzles", href: "/products/nozzles" },
       { id: "lab", label: "Lab Air Distribution", href: "/products/lab-air-distribution" },
-      { id: "hepa", label: "Air Filtration & HEPA", href: "/products/air-filtration-&-hepa-units" },
+      { id: "hepa", label: "Air Filtration & HEPA", href: "/products/air-filtration-and-hepa-units" },
       { id: "fans", label: "Inline Duct Fans", href: "/products/inline-duct-fans" },
     ]},
     { id: "blog", label: "Blog", href: "/blog" },
@@ -577,9 +587,35 @@ export const getTrustContent = () => get<TrustContent>("site:trust", defaultTrus
 export const getContactContent = () => get<ContactContent>("site:contact", defaultContact);
 export const getBrandingContent = () => get<BrandingContent>("site:branding", defaultBranding);
 export const getDealersContent = () => get<DealersContent>("site:dealers", defaultDealers);
-export const getNavbarContent = () => get<NavbarContent>("site:navbar", defaultNavbar);
+
+export async function getNavbarContent(): Promise<NavbarContent> {
+  const stored = await redis.get<NavbarContent>("site:navbar").catch(() => null);
+  if (!stored) return defaultNavbar;
+  // Merge children from defaults if stored navbar items are missing them
+  const items = stored.items.map((item) => {
+    const def = defaultNavbar.items.find((d) => d.id === item.id);
+    if (def?.children && !item.children) {
+      return { ...item, children: def.children };
+    }
+    return item;
+  });
+  return { ...stored, items };
+}
 export const getPortfolioContent = () => get<PortfolioContent>("site:portfolio", defaultPortfolio);
-export const getProductsContent = () => get<ProductsContent>("site:products", defaultProducts);
+
+export async function getProductsContent(): Promise<ProductsContent> {
+  const stored = await redis.get<ProductsContent>("site:products").catch(() => null);
+  if (!stored) return defaultProducts;
+  // Merge children from defaults if stored products are missing them
+  const items = stored.items.map((item) => {
+    const def = defaultProducts.items.find((d) => d.id === item.id);
+    if (def?.children && !item.children) {
+      return { ...item, children: def.children };
+    }
+    return item;
+  });
+  return { ...stored, items };
+}
 
 /* ── Contact submissions ────────────────────────────────────── */
 

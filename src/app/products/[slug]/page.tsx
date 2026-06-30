@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getProductsContent, getNavbarContent } from "@/lib/content";
+import { getProductsContent, getNavbarContent, slugify } from "@/lib/content";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const products = await getProductsContent();
   const product = products.items.find(
-    (p) => p.title.toLowerCase().replace(/\s+/g, "-") === slug
+    (p) => slugify(p.title) === slug
   );
   if (!product) return { title: "Product Not Found" };
   return {
@@ -30,7 +30,7 @@ export default async function ProductDetailPage({ params }: Props) {
   ]);
 
   const product = products.items.find(
-    (p) => p.title.toLowerCase().replace(/\s+/g, "-") === slug
+    (p) => slugify(p.title) === slug
   );
 
   if (!product) notFound();
@@ -251,7 +251,7 @@ export default async function ProductDetailPage({ params }: Props) {
                 {related.map((p) => (
                   <Link
                     key={p.id}
-                    href={`/products/${p.title.toLowerCase().replace(/\s+/g, "-")}`}
+                    href={`/products/${slugify(p.title)}`}
                     className="group relative rounded-[16px] overflow-hidden bg-white border border-[var(--color-border)] shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
                   >
                     <div className="relative h-[180px] overflow-hidden">
