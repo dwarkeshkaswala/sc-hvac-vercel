@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { TrustContent } from "@/lib/content";
 import { defaultTrust } from "@/lib/content";
+import { Editable, DragHandle, reorder } from "@/components/InlineEdit";
 
 /* Pillar icons — ordered by pillar index (cycles if more pillars added) */
 const PILLAR_ICONS = [
@@ -15,12 +16,22 @@ const PILLAR_ICONS = [
   <svg key="5" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
 ];
 
-export default function Trust({ data }: { data?: TrustContent }) {
-  const d = data ?? defaultTrust;
+export default function Trust({ data, editing, onSave }: { data?: TrustContent; editing?: boolean; onSave?: (data: unknown) => void }) {
+  const [d, setD] = useState(data ?? defaultTrust);
   const stats = d.stats;
   const pillars = d.pillars;
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, 0.05);
+
+  useEffect(() => { if (data) setD(data); }, [data]);
+  useEffect(() => { if (editing && onSave) onSave(d); }, [d, editing, onSave]);
+
+  const updateStat = useCallback((i: number, f: "value" | "label", v: string) => {
+    setD((prev) => { const s = [...prev.stats]; s[i] = { ...s[i], [f]: v }; return { ...prev, stats: s }; });
+  }, []);
+  const updatePillar = useCallback((i: number, f: "title" | "desc", v: string) => {
+    setD((prev) => { const p = [...prev.pillars]; p[i] = { ...p[i], [f]: v }; return { ...prev, pillars: p }; });
+  }, []);
 
   return (
     <section id="why-us" ref={ref} className="py-24 bg-[var(--color-bg)]">
@@ -32,17 +43,22 @@ export default function Trust({ data }: { data?: TrustContent }) {
             <div>
               <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
                 <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
-                Why Shreeji
+                <Editable value={d.sectionLabel ?? "Why Shreeji"} onChange={(v) => setD((prev) => ({ ...prev, sectionLabel: v }))} tag="span" editing={editing} />
               </span>
               <h2 className="font-[var(--font-display)] text-[clamp(30px,3.5vw,44px)] font-bold tracking-[-0.03em] leading-[1.1]">
-                Built on trust,
+                <Editable value={d.heading ?? "Built on trust,"} onChange={(v) => setD((prev) => ({ ...prev, heading: v }))} tag="span" editing={editing} />
                 <br />
-                <span className="text-[var(--color-text-tertiary)]">proven by results.</span>
+                <Editable value={d.headingSub ?? "proven by results."} onChange={(v) => setD((prev) => ({ ...prev, headingSub: v }))} tag="span" className="text-[var(--color-text-tertiary)]" editing={editing} />
               </h2>
             </div>
-            <p className="text-[14px] text-[var(--color-text-secondary)] max-w-[340px] sm:text-right leading-[1.7]">
-              15 years, zero shortcuts — certified engineering with the accountability of a team that treats every project like our own.
-            </p>
+            <Editable
+              value={d.description ?? "15 years, zero shortcuts — certified engineering with the accountability of a team that treats every project like our own."}
+              onChange={(v) => setD((prev) => ({ ...prev, description: v }))}
+              tag="p"
+              className="text-[14px] text-[var(--color-text-secondary)] max-w-[340px] sm:text-right leading-[1.7]"
+              multiline
+              editing={editing}
+            />
           </div>
         </div>
 
@@ -60,10 +76,15 @@ export default function Trust({ data }: { data?: TrustContent }) {
             </div>
 
             <div className="relative grid grid-cols-2 gap-px bg-black/[0.06] rounded-[16px] overflow-hidden mt-8">
-              {stats.map((s) => (
-                <div key={s.label} className="bg-[#F2F2F2] px-5 py-5">
-                  <p className="font-[var(--font-display)] text-[30px] font-black tracking-[-0.04em] text-[#0000B8] leading-none mb-1">{s.value}</p>
-                  <p className="text-[10.5px] text-[var(--color-text-tertiary)] font-semibold uppercase tracking-[0.07em]">{s.label}</p>
+              {stats.map((s, i) => (
+                <div key={i} className="bg-[#F2F2F2] px-5 py-5 relative" data-drag-item>
+                  {editing && (
+                    <div className="absolute top-1 right-1 z-10">
+                      <DragHandle index={i} listId="trust-stats" onReorder={(from, to) => setD((prev) => ({ ...prev, stats: reorder(prev.stats, from, to) }))} editing={editing} />
+                    </div>
+                  )}
+                  <Editable value={s.value} onChange={(v) => updateStat(i, "value", v)} tag="p" className="font-[var(--font-display)] text-[30px] font-black tracking-[-0.04em] text-[#0000B8] leading-none mb-1" editing={editing} />
+                  <Editable value={s.label} onChange={(v) => updateStat(i, "label", v)} tag="p" className="text-[10.5px] text-[var(--color-text-tertiary)] font-semibold uppercase tracking-[0.07em]" editing={editing} />
                 </div>
               ))}
             </div>
@@ -71,14 +92,20 @@ export default function Trust({ data }: { data?: TrustContent }) {
 
           {/* Right — pillars grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {pillars.map((p) => (
+            {pillars.map((p, i) => (
               <div
                 key={p.num}
+                data-drag-item
                 className="group relative bg-[var(--color-surface)] border border-[var(--color-border)]
                   rounded-[20px] p-6 overflow-hidden
                   transition-all duration-400 ease-[var(--ease)]
                   hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,184,0.08)] hover:border-[#FF7F00]/40"
               >
+                {editing && (
+                  <div className="absolute top-3 right-3 z-10">
+                    <DragHandle index={i} listId="trust-pillars" onReorder={(from, to) => setD((prev) => ({ ...prev, pillars: reorder(prev.pillars, from, to) }))} editing={editing} />
+                  </div>
+                )}
                 {/* watermark number */}
                 <span className="absolute -bottom-2 right-4 font-[var(--font-display)] text-[72px] font-black
                   leading-none select-none pointer-events-none text-black/[0.04]
@@ -90,15 +117,10 @@ export default function Trust({ data }: { data?: TrustContent }) {
                   <div className="w-10 h-10 rounded-[10px] bg-[var(--color-surface-raised)] border border-[var(--color-border)]
                     flex items-center justify-center mb-4 text-[var(--color-text-secondary)]
                     transition-all duration-300 group-hover:bg-[#0000B8] group-hover:text-white group-hover:border-transparent">
-                    {PILLAR_ICONS[pillars.indexOf(p) % PILLAR_ICONS.length]}
+                    {PILLAR_ICONS[i % PILLAR_ICONS.length]}
                   </div>
-                  <h3 className="font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text-primary)] tracking-[-0.015em] mb-1.5
-                    transition-colors duration-300 group-hover:text-[#FF7F00]">
-                    {p.title}
-                  </h3>
-                  <p className="text-[12.5px] text-[var(--color-text-secondary)] leading-[1.7]">
-                    {p.desc}
-                  </p>
+                  <Editable value={p.title} onChange={(v) => updatePillar(i, "title", v)} tag="h3" className="font-[var(--font-display)] text-[15px] font-bold text-[var(--color-text-primary)] tracking-[-0.015em] mb-1.5 transition-colors duration-300 group-hover:text-[#FF7F00]" editing={editing} />
+                  <Editable value={p.desc} onChange={(v) => updatePillar(i, "desc", v)} tag="p" className="text-[12.5px] text-[var(--color-text-secondary)] leading-[1.7]" multiline editing={editing} />
                 </div>
               </div>
             ))}

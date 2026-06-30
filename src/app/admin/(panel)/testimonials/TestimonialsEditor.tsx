@@ -1,22 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { TestimonialItem } from "@/lib/content";
+import { useEffect, useRef, useState } from "react";
+import type { TestimonialItem, TestimonialsContent } from "@/lib/content";
 import { saveTestimonialsAction } from "@/app/admin/actions";
 import { PreviewShell } from "../hero/HeroEditor";
 import MediaPicker from "@/components/MediaPicker";
+import { useToast, SaveButton, PageHeader, AddButton, ItemCard, UnsavedBanner } from "../components/AdminUI";
 
-interface Props { initial: TestimonialItem[]; saved: boolean }
+interface Props { initial: TestimonialsContent; saved: boolean }
 
 export default function TestimonialsEditor({ initial, saved }: Props) {
-  const [items, setItems] = useState<TestimonialItem[]>(initial);
-  const [msg, setMsg] = useState(saved ? "Saved!" : "");
+  const [items, setItems] = useState<TestimonialItem[]>(initial.items);
+  const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
+  const { toast } = useToast();
+  const initialRef = useRef(JSON.stringify(initial.items));
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
-    if (!msg) return;
-    const t = setTimeout(() => setMsg(""), 3000);
-    return () => clearTimeout(t);
-  }, [msg]);
+    setDirty(JSON.stringify(items) !== initialRef.current);
+  }, [items]);
+
+  useEffect(() => {
+    if (saved) toast("success", "Testimonials saved successfully");
+  }, [saved, toast]);
+
+  // Warn before leaving
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   const update = (i: number, field: keyof TestimonialItem, val: string | number) =>
     setItems((s) => {
@@ -35,92 +49,86 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
 
   async function handleSave() {
     await saveTestimonialsAction(items);
-    setMsg("Saved!");
+    initialRef.current = JSON.stringify(items);
+    setDirty(false);
+    toast("success", "Testimonials saved");
+  }
+
+  function handleDiscard() {
+    setItems(JSON.parse(initialRef.current));
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
       <div className="w-full lg:w-[560px] shrink-0">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Testimonials</h1>
-            <p className="text-[13.5px] text-[#666] mt-1">Add or edit client reviews shown on the site.</p>
-          </div>
-          <button onClick={add} className="h-[38px] px-5 rounded-[10px] bg-[#0000B8] text-white text-[13px] font-semibold hover:bg-[#000096] transition-all">
-            + Add review
-          </button>
-        </div>
-
-        {msg && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 text-[13px] font-medium px-4 py-3 rounded-[12px]">
-            ✓ {msg}
-          </div>
-        )}
+        <PageHeader
+          title="Testimonials"
+          description="Add or edit client reviews shown on the site."
+          badge={dirty ? <span className="inline-flex items-center h-[22px] px-2.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600">Unsaved</span> : undefined}
+          action={<AddButton onClick={add} label="Add review" />}
+        />
 
         <div className="space-y-4 mb-6">
           {items.map((t, i) => (
-            <div key={i} className="bg-white rounded-[16px] border border-[#E5E7EB] p-5">
-              <div className="flex items-start justify-between gap-3 mb-3">
+            <ItemCard
+              key={i}
+              title={t.name || "Untitled review"}
+              onRemove={() => remove(i)}
+              collapsed={collapsed[i]}
+              onToggleCollapse={() => setCollapsed((c) => ({ ...c, [i]: !c[i] }))}
+            >
+              <div className="space-y-3">
                 <input
-                  className={`${inp} flex-1`}
+                  className={inp}
                   placeholder="Client name"
                   value={t.name}
                   onChange={(e) => update(i, "name", e.target.value)}
                 />
-                <button
-                  onClick={() => remove(i)}
-                  className="mt-2 text-[#ccc] hover:text-red-400 transition-colors text-[20px] leading-none"
-                >×</button>
-              </div>
 
-              <div className="grid grid-cols-2 gap-3 mb-3">
-                <input className={inp} placeholder="Role / Title" value={t.role} onChange={(e) => update(i, "role", e.target.value)} />
-                <input className={inp} placeholder="Company" value={t.company} onChange={(e) => update(i, "company", e.target.value)} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 mb-3">
-                <MediaPicker
-                  value={t.photo}
-                  onChange={(url) => update(i, "photo", url)}
-                  label="Photo"
-                  dimensions="200 × 200"
-                  aspectRatio="1:1"
-                />
-                <div className="flex gap-2 items-center">
-                  <input className={`${inp} flex-1`} placeholder="Accent color (#hex)" value={t.accent} onChange={(e) => update(i, "accent", e.target.value)} />
-                  <div className="w-[38px] h-[38px] rounded-[8px] border border-[#E5E7EB] shrink-0" style={{ background: t.accent }} />
+                <div className="grid grid-cols-2 gap-3">
+                  <input className={inp} placeholder="Role / Title" value={t.role} onChange={(e) => update(i, "role", e.target.value)} />
+                  <input className={inp} placeholder="Company" value={t.company} onChange={(e) => update(i, "company", e.target.value)} />
                 </div>
-              </div>
 
-              <div className="mb-3 flex items-center gap-3">
-                <label className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#999] whitespace-nowrap">Rating</label>
-                <input
-                  type="range" min={1} max={5} step={1}
-                  value={t.rating}
-                  onChange={(e) => update(i, "rating", Number(e.target.value))}
-                  className="flex-1"
+                <div className="grid grid-cols-2 gap-3">
+                  <MediaPicker
+                    value={t.photo}
+                    onChange={(url) => update(i, "photo", url)}
+                    label="Photo"
+                    dimensions="200 × 200"
+                    aspectRatio="1:1"
+                  />
+                  <div className="flex gap-2 items-center">
+                    <input className={`${inp} flex-1`} placeholder="Accent color (#hex)" value={t.accent} onChange={(e) => update(i, "accent", e.target.value)} />
+                    <div className="w-[42px] h-[42px] rounded-[8px] border border-[#E5E7EB] shrink-0" style={{ background: t.accent }} />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <label className="text-[11.5px] font-semibold text-[#666] whitespace-nowrap">Rating</label>
+                  <input
+                    type="range" min={1} max={5} step={1}
+                    value={t.rating}
+                    onChange={(e) => update(i, "rating", Number(e.target.value))}
+                    className="flex-1"
+                  />
+                  <span className="text-[13px] font-bold text-[#111] w-[20px]">{t.rating}</span>
+                </div>
+
+                <textarea
+                  className={ta}
+                  placeholder="Quote text"
+                  rows={3}
+                  value={t.quote}
+                  onChange={(e) => update(i, "quote", e.target.value)}
                 />
-                <span className="text-[13px] font-bold text-[#111] w-[20px]">{t.rating}</span>
               </div>
-
-              <textarea
-                className={ta}
-                placeholder="Quote text"
-                rows={3}
-                value={t.quote}
-                onChange={(e) => update(i, "quote", e.target.value)}
-              />
-            </div>
+            </ItemCard>
           ))}
         </div>
 
-        <button
-          onClick={handleSave}
-          className="h-[44px] px-8 rounded-[12px] bg-[#111111] text-white text-[14px] font-semibold hover:bg-[#222] transition-all"
-        >
-          Save all testimonials
-        </button>
+        <SaveButton onClick={handleSave} hasChanges={dirty} />
       </div>
 
       {/* ─── Preview ─── */}
@@ -184,10 +192,12 @@ export default function TestimonialsEditor({ initial, saved }: Props) {
           </div>
         </PreviewShell>
       </div>
+
+      {/* Unsaved changes banner */}
+      <UnsavedBanner show={dirty} onSave={handleSave} onDiscard={handleDiscard} />
     </div>
   );
 }
 
-const inp = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
-const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
-
+const inp = "h-[42px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";
+const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";

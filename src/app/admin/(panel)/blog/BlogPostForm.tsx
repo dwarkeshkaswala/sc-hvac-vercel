@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BlogPost, ContentBlock } from "@/lib/blog";
 import { saveBlogPostAction } from "@/app/admin/actions";
 import MediaPicker from "@/components/MediaPicker";
+import { useToast, SaveButton, PageHeader, FormCard, UnsavedBanner, ConfirmDialog } from "../components/AdminUI";
 
 interface Props {
   initial: BlogPost;
@@ -14,14 +15,21 @@ const BLOCK_TYPES: ContentBlock["type"][] = ["paragraph", "heading", "subheading
 
 export default function BlogPostForm({ initial, isNew }: Props) {
   const [post, setPost] = useState<BlogPost>(initial);
-  const [msg, setMsg] = useState("");
-  const [saving, setSaving] = useState(false);
+  const { toast } = useToast();
+  const initialRef = useRef(JSON.stringify(initial));
+  const [dirty, setDirty] = useState(false);
+  const [removeBlockIdx, setRemoveBlockIdx] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!msg) return;
-    const t = setTimeout(() => setMsg(""), 3500);
-    return () => clearTimeout(t);
-  }, [msg]);
+    setDirty(JSON.stringify(post) !== initialRef.current);
+  }, [post]);
+
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   const set = (field: keyof BlogPost, val: unknown) =>
     setPost((p) => ({ ...p, [field]: val }));
@@ -86,44 +94,25 @@ export default function BlogPostForm({ initial, isNew }: Props) {
 
   async function handleSave() {
     if (!post.slug || !post.title) {
-      setMsg("Slug and title are required.");
+      toast("error", "Slug and title are required.");
       return;
     }
-    setSaving(true);
-    try {
-      await saveBlogPostAction(post);
-      setMsg("Saved!");
-    } catch {
-      setMsg("Error saving post.");
-    } finally {
-      setSaving(false);
-    }
+    await saveBlogPostAction(post);
+    initialRef.current = JSON.stringify(post);
+    setDirty(false);
+    toast("success", isNew ? "Post published!" : "Post saved!");
   }
 
   return (
-    <div className="p-4 sm:p-8 max-w-[760px]">
-      <div className="mb-6">
-        <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">
-          {isNew ? "New Blog Post" : "Edit Post"}
-        </h1>
-        <p className="text-[13.5px] text-[#666] mt-1">
-          {isNew ? "Create a new article." : `Editing: ${initial.slug}`}
-        </p>
-      </div>
-
-      {msg && (
-        <div className={`mb-6 text-[13px] font-medium px-4 py-3 rounded-[12px] ${
-          msg === "Saved!"
-            ? "bg-green-50 border border-green-200 text-green-700"
-            : "bg-red-50 border border-red-200 text-red-600"
-        }`}>
-          {msg === "Saved!" ? "✓ " : "⚠ "}{msg}
-        </div>
-      )}
+    <div className="p-4 sm:p-8 max-w-[760px] space-y-5">
+      <PageHeader
+        title={isNew ? "New Blog Post" : "Edit Post"}
+        description={isNew ? "Create a new article." : `Editing: ${initial.slug}`}
+        badge={dirty ? <span className="inline-flex items-center h-[22px] px-2.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600">Unsaved</span> : undefined}
+      />
 
       {/* Meta */}
-      <section className="bg-white rounded-[16px] border border-[#E5E7EB] p-6 mb-4 space-y-3">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#999] mb-2">Metadata</h2>
+      <FormCard title="Metadata" description="Post details and SEO info">
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={lbl}>Slug (URL)</label>
@@ -175,11 +164,10 @@ export default function BlogPostForm({ initial, isNew }: Props) {
             <input className={inp} placeholder="Lead Engineer" value={post.author.role} onChange={(e) => setAuthor("role", e.target.value)} />
           </div>
         </div>
-      </section>
+      </FormCard>
 
       {/* Content blocks */}
-      <section className="bg-white rounded-[16px] border border-[#E5E7EB] p-6 mb-4">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#999] mb-4">Content Blocks</h2>
+      <FormCard title="Content Blocks" description="Build your article with structured content blocks">
         <div className="space-y-3 mb-4">
           {post.content.map((block, i) => (
             <div key={i} className="border border-[#E5E7EB] rounded-[12px] p-3.5 group">
@@ -190,7 +178,9 @@ export default function BlogPostForm({ initial, isNew }: Props) {
                 <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => moveBlock(i, -1)} className={ctrl} title="Move up">↑</button>
                   <button onClick={() => moveBlock(i, 1)}  className={ctrl} title="Move down">↓</button>
-                  <button onClick={() => removeBlock(i)} className={`${ctrl} hover:text-red-500`} title="Remove">×</button>
+                  <button onClick={() => setRemoveBlockIdx(i)} className={`${ctrl} hover:text-red-500 hover:bg-red-50`} title="Remove">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                  </button>
                 </div>
               </div>
 
@@ -209,7 +199,9 @@ export default function BlogPostForm({ initial, isNew }: Props) {
                       <input className={`${inp} flex-1`} value={item}
                         onChange={(e) => updateListItem(i, ii, e.target.value)} />
                       <button onClick={() => removeListItem(i, ii)}
-                        className="text-[#ccc] hover:text-red-400 text-[18px] leading-none opacity-0 group-hover/item:opacity-100 transition-opacity">×</button>
+                        className="w-[42px] h-[42px] flex items-center justify-center rounded-[8px] text-[#CCC] hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover/item:opacity-100">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                      </button>
                     </div>
                   ))}
                   <button onClick={() => addListItem(i)}
@@ -239,20 +231,39 @@ export default function BlogPostForm({ initial, isNew }: Props) {
             </button>
           ))}
         </div>
-      </section>
+      </FormCard>
 
-      <button
+      <SaveButton
         onClick={handleSave}
-        disabled={saving}
-        className="h-[44px] px-8 rounded-[12px] bg-[#111111] text-white text-[14px] font-semibold hover:bg-[#222] transition-all disabled:opacity-60"
-      >
-        {saving ? "Saving…" : isNew ? "Publish post" : "Save changes"}
-      </button>
+        label={isNew ? "Publish post" : "Save changes"}
+        hasChanges={dirty}
+      />
+
+      {/* Unsaved changes banner */}
+      <UnsavedBanner
+        show={dirty}
+        onSave={handleSave}
+        onDiscard={() => setPost(JSON.parse(initialRef.current))}
+      />
+
+      {/* Block remove confirmation */}
+      <ConfirmDialog
+        open={removeBlockIdx !== null}
+        title="Remove block?"
+        message="This content block will be removed. You can undo by not saving."
+        confirmLabel="Remove"
+        confirmVariant="danger"
+        onConfirm={() => {
+          if (removeBlockIdx !== null) removeBlock(removeBlockIdx);
+          setRemoveBlockIdx(null);
+        }}
+        onCancel={() => setRemoveBlockIdx(null)}
+      />
     </div>
   );
 }
 
-const inp  = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
-const ta   = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
-const lbl  = "block text-[11px] font-bold uppercase tracking-[0.06em] text-[#999] mb-1.5";
-const ctrl = "w-[24px] h-[24px] rounded-[6px] text-[#999] hover:bg-[#F3F4F6] flex items-center justify-center text-[14px] font-bold transition-colors";
+const inp  = "h-[42px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";
+const ta   = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";
+const lbl  = "block text-[11.5px] font-semibold text-[#666] mb-1.5";
+const ctrl = "w-[26px] h-[26px] rounded-[6px] text-[#999] hover:bg-[#F3F4F6] flex items-center justify-center text-[14px] font-bold transition-all";

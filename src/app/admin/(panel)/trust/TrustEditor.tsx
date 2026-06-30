@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { TrustContent } from "@/lib/content";
 import { saveTrustAction } from "@/app/admin/actions";
 import { PreviewShell } from "../hero/HeroEditor";
+import { useToast, SaveButton, PageHeader, FormCard, UnsavedBanner } from "../components/AdminUI";
 
 interface Props {
   initial: TrustContent;
@@ -12,15 +13,24 @@ interface Props {
 
 export default function TrustEditor({ initial, saved }: Props) {
   const [data, setData] = useState<TrustContent>(initial);
-  const [msg, setMsg] = useState(saved ? "Saved!" : "");
-  const formRef = useRef<HTMLFormElement>(null);
+  const { toast } = useToast();
+  const initialRef = useRef(JSON.stringify(initial));
+  const [dirty, setDirty] = useState(false);
 
-  // clear success msg after 3s
   useEffect(() => {
-    if (!msg) return;
-    const t = setTimeout(() => setMsg(""), 3000);
-    return () => clearTimeout(t);
-  }, [msg]);
+    setDirty(JSON.stringify(data) !== initialRef.current);
+  }, [data]);
+
+  useEffect(() => {
+    if (saved) toast("success", "Trust section saved successfully");
+  }, [saved, toast]);
+
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   const updateStat = (i: number, field: "value" | "label", val: string) =>
     setData((d) => {
@@ -50,23 +60,24 @@ export default function TrustEditor({ initial, saved }: Props) {
 
   async function handleSubmit() {
     await saveTrustAction(data);
-    setMsg("Saved!");
+    initialRef.current = JSON.stringify(data);
+    setDirty(false);
+    toast("success", "Trust section saved");
+  }
+
+  function handleDiscard() {
+    setData(JSON.parse(initialRef.current));
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
       <div className="w-full lg:w-[560px] shrink-0">
-        <div className="mb-6">
-          <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Why Us / Trust</h1>
-          <p className="text-[13.5px] text-[#666] mt-1">Edit headline stats and trust pillars.</p>
-        </div>
-
-        {msg && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 text-[13px] font-medium px-4 py-3 rounded-[12px]">
-            ✓ {msg}
-          </div>
-        )}
+        <PageHeader
+          title="Why Us / Trust"
+          description="Edit headline stats and trust pillars."
+          badge={dirty ? <span className="inline-flex items-center h-[22px] px-2.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600">Unsaved</span> : undefined}
+        />
 
         {/* Stats */}
         <section className="bg-white rounded-[16px] border border-[#E5E7EB] p-6 mb-4">
@@ -127,23 +138,16 @@ export default function TrustEditor({ initial, saved }: Props) {
                 <button
                   type="button"
                   onClick={() => removePillar(i)}
-                  className="mt-2.5 text-[#ccc] hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 text-[18px] leading-none"
+                  className="mt-2.5 w-7 h-7 flex items-center justify-center rounded-[6px] text-[#CCC] hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
                 >
-                  ×
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
                 </button>
               </div>
             ))}
           </div>
         </section>
 
-        <form ref={formRef} action={handleSubmit}>
-          <button
-            type="submit"
-            className="h-[44px] px-8 rounded-[12px] bg-[#111111] text-white text-[14px] font-semibold hover:bg-[#222] transition-all"
-          >
-            Save changes
-          </button>
-        </form>
+        <SaveButton onClick={handleSubmit} hasChanges={dirty} />
       </div>
 
       {/* ─── Preview ─── */}
@@ -193,10 +197,12 @@ export default function TrustEditor({ initial, saved }: Props) {
           </div>
         </PreviewShell>
       </div>
+
+      {/* Unsaved changes banner */}
+      <UnsavedBanner show={dirty} onSave={handleSubmit} onDiscard={handleDiscard} />
     </div>
   );
 }
 
 const inp =
-  "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
-
+  "h-[42px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";

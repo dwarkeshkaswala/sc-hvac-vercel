@@ -1,22 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { DealersContent, DealerItem } from "@/lib/content";
 import { saveDealersAction } from "@/app/admin/actions";
 import { PreviewShell } from "../hero/HeroEditor";
 import MediaPicker from "@/components/MediaPicker";
+import { useToast, SaveButton, PageHeader, AddButton, ItemCard, UnsavedBanner } from "../components/AdminUI";
 
 interface Props { initial: DealersContent; saved: boolean }
 
 export default function DealersEditor({ initial, saved }: Props) {
   const [data, setData] = useState<DealersContent>(initial);
-  const [msg, setMsg] = useState(saved ? "Saved!" : "");
+  const { toast } = useToast();
+  const initialRef = useRef(JSON.stringify(initial));
+  const [dirty, setDirty] = useState(false);
+  const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
-    if (!msg) return;
-    const t = setTimeout(() => setMsg(""), 3000);
-    return () => clearTimeout(t);
-  }, [msg]);
+    setDirty(JSON.stringify(data) !== initialRef.current);
+  }, [data]);
+
+  useEffect(() => {
+    if (saved) toast("success", "Dealers saved successfully");
+  }, [saved, toast]);
+
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   function updateDealer(index: number, updates: Partial<DealerItem>) {
     setData((prev) => ({
@@ -56,32 +69,29 @@ export default function DealersEditor({ initial, saved }: Props) {
 
   async function handleSave() {
     await saveDealersAction(data);
-    setMsg("Saved!");
+    initialRef.current = JSON.stringify(data);
+    setDirty(false);
+    toast("success", "Dealers saved");
+  }
+
+  function handleDiscard() {
+    setData(JSON.parse(initialRef.current));
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
       <div className="w-full lg:w-[560px] shrink-0">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Authorised Dealers</h1>
-            <p className="text-[13.5px] text-[#666] mt-1">Manage dealer cards, logos, and trust indicators.</p>
-          </div>
-          <button onClick={addDealer} className="h-[38px] px-5 rounded-[10px] bg-[#0000B8] text-white text-[13px] font-semibold hover:bg-[#000096] transition-all">
-            + Add dealer
-          </button>
-        </div>
-
-        {msg && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 text-[13px] font-medium px-4 py-3 rounded-[12px]">
-            ✓ {msg}
-          </div>
-        )}
+        <PageHeader
+          title="Authorised Dealers"
+          description="Manage dealer cards, logos, and trust indicators."
+          badge={dirty ? <span className="inline-flex items-center h-[22px] px-2.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600">Unsaved</span> : undefined}
+          action={<AddButton onClick={addDealer} label="Add dealer" />}
+        />
 
         {/* Section header text */}
-        <div className="bg-white rounded-[16px] border border-[#E5E7EB] p-5 mb-4">
-          <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-[#999] mb-4">Section header</p>
+        <div className="bg-white rounded-[14px] border border-[#E5E7EB] p-5 mb-4">
+          <p className="text-[13px] font-bold text-[#111] mb-3">Section Header</p>
           <div className="space-y-3">
             <input
               className={inp}
@@ -163,10 +173,13 @@ export default function DealersEditor({ initial, saved }: Props) {
         </div>
 
         {/* Trust indicators */}
-        <div className="bg-white rounded-[16px] border border-[#E5E7EB] p-5 mb-6">
+        <div className="bg-white rounded-[14px] border border-[#E5E7EB] p-5 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-[#999]">Trust indicators</p>
-            <button onClick={addTrust} className="text-[12px] font-semibold text-[#0000B8] hover:text-[#000096]">+ Add</button>
+            <p className="text-[13px] font-bold text-[#111]">Trust Indicators</p>
+            <button onClick={addTrust} className="text-[12px] font-semibold text-[#0000B8] hover:text-[#000096] flex items-center gap-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" /></svg>
+              Add
+            </button>
           </div>
           <div className="space-y-2">
             {data.trustIndicators.map((item, idx) => (
@@ -175,19 +188,16 @@ export default function DealersEditor({ initial, saved }: Props) {
                 <input className={`${inp} flex-1`} placeholder="Label" value={item.label} onChange={(e) => updateTrust(idx, "label", e.target.value)} />
                 <button
                   onClick={() => removeTrust(idx)}
-                  className="text-[#ccc] hover:text-red-400 transition-colors text-[18px] leading-none opacity-0 group-hover:opacity-100"
-                >×</button>
+                  className="w-[42px] h-[42px] flex items-center justify-center rounded-[8px] text-[#CCC] hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                </button>
               </div>
             ))}
           </div>
         </div>
 
-        <button
-          onClick={handleSave}
-          className="h-[44px] px-8 rounded-[12px] bg-[#111111] text-white text-[14px] font-semibold hover:bg-[#222] transition-all"
-        >
-          Save all dealers
-        </button>
+        <SaveButton onClick={handleSave} label="Save all dealers" hasChanges={dirty} />
       </div>
 
       {/* ─── Preview ─── */}
@@ -255,9 +265,12 @@ export default function DealersEditor({ initial, saved }: Props) {
           </div>
         </PreviewShell>
       </div>
+
+      {/* Unsaved changes banner */}
+      <UnsavedBanner show={dirty} onSave={handleSave} onDiscard={handleDiscard} />
     </div>
   );
 }
 
-const inp = "h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
-const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
+const inp = "h-[42px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] w-full focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";
+const ta  = "w-full px-3.5 py-2.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] leading-[1.7] resize-y focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";

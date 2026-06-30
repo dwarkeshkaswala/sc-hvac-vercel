@@ -1,23 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BrandingContent } from "@/lib/content";
 import { defaultBranding } from "@/lib/content";
 import { saveBrandingAction } from "@/app/admin/actions";
 import { PreviewShell } from "../hero/HeroEditor";
 import MediaPicker from "@/components/MediaPicker";
+import { useToast, SaveButton, PageHeader, FormCard, UnsavedBanner } from "../components/AdminUI";
 
 interface Props { initial: BrandingContent; saved: boolean }
 
 export default function BrandingEditor({ initial, saved }: Props) {
   const [d, setD] = useState<BrandingContent>(initial);
-  const [msg, setMsg] = useState(saved ? "Saved!" : "");
+  const { toast } = useToast();
+  const initialRef = useRef(JSON.stringify(initial));
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
-    if (!msg) return;
-    const t = setTimeout(() => setMsg(""), 3000);
-    return () => clearTimeout(t);
-  }, [msg]);
+    setDirty(JSON.stringify(d) !== initialRef.current);
+  }, [d]);
+
+  useEffect(() => {
+    if (saved) toast("success", "Branding saved successfully");
+  }, [saved, toast]);
+
+  useEffect(() => {
+    if (!dirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   function set<K extends keyof BrandingContent>(k: K, v: BrandingContent[K]) {
     setD((prev) => ({ ...prev, [k]: v }));
@@ -29,38 +41,38 @@ export default function BrandingEditor({ initial, saved }: Props) {
 
   async function handleSave() {
     await saveBrandingAction(d);
-    setMsg("Saved!");
+    initialRef.current = JSON.stringify(d);
+    setDirty(false);
+    toast("success", "Branding saved");
+  }
+
+  function handleDiscard() {
+    setD(JSON.parse(initialRef.current));
   }
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-8 items-start">
       {/* ─── Form ─── */}
       <div className="w-full lg:w-[500px] shrink-0 space-y-5">
-        <div>
-          <h1 className="text-[22px] font-bold text-[#111111] tracking-[-0.02em]">Branding</h1>
-          <p className="text-[13.5px] text-[#666] mt-1">Manage your site identity, logos, colors, and meta images.</p>
-        </div>
-
-        {msg && (
-          <div className="bg-green-50 border border-green-200 text-green-700 text-[13px] font-medium px-4 py-3 rounded-[12px]">
-            ✓ {msg}
-          </div>
-        )}
+        <PageHeader
+          title="Branding"
+          description="Manage your site identity, logos, colors, and meta images."
+          badge={dirty ? <span className="inline-flex items-center h-[22px] px-2.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600">Unsaved</span> : undefined}
+        />
 
         {/* Site Identity */}
-        <div className="bg-white rounded-[16px] border border-[#E5E7EB] p-5">
-          <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-[#999] mb-4">Site identity</p>
+        <FormCard title="Site Identity" description="Your brand name and tagline">
           <div className="space-y-3">
             <div>
-              <p className="text-[11px] font-semibold text-[#999] mb-1.5">Site Name</p>
+              <p className="text-[11.5px] font-semibold text-[#666] mb-1.5">Site Name</p>
               <input className={inp} value={d.siteName} onChange={(e) => set("siteName", e.target.value)} placeholder="Shreeji Cooling" />
             </div>
             <div>
-              <p className="text-[11px] font-semibold text-[#999] mb-1.5">Tagline</p>
+              <p className="text-[11.5px] font-semibold text-[#666] mb-1.5">Tagline</p>
               <input className={inp} value={d.tagline} onChange={(e) => set("tagline", e.target.value)} placeholder="Precision climate engineering" />
             </div>
           </div>
-        </div>
+        </FormCard>
 
         {/* Logos & Favicon */}
         <div className="bg-white rounded-[16px] border border-[#E5E7EB] p-5">
@@ -102,12 +114,7 @@ export default function BrandingEditor({ initial, saved }: Props) {
           </div>
         </div>
 
-        <button
-          onClick={handleSave}
-          className="h-[44px] px-8 rounded-[12px] bg-[#111111] text-white text-[14px] font-semibold hover:bg-[#222] transition-all duration-200"
-        >
-          Save branding
-        </button>
+        <SaveButton onClick={handleSave} label="Save branding" hasChanges={dirty} />
       </div>
 
       {/* ─── Preview ─── */}
@@ -165,6 +172,9 @@ export default function BrandingEditor({ initial, saved }: Props) {
           </div>
         </PreviewShell>
       </div>
+
+      {/* Unsaved changes banner */}
+      <UnsavedBanner show={dirty} onSave={handleSave} onDiscard={handleDiscard} />
     </div>
   );
 }
@@ -174,19 +184,19 @@ export default function BrandingEditor({ initial, saved }: Props) {
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div>
-      <p className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#999] mb-1.5">{label}</p>
+      <p className="text-[11.5px] font-semibold text-[#666] mb-1.5">{label}</p>
       <div className="flex items-center gap-2">
         <input
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-[38px] h-[38px] rounded-[8px] border border-[#E5E7EB] cursor-pointer p-0.5"
+          className="w-[42px] h-[42px] rounded-[8px] border border-[#E5E7EB] cursor-pointer p-0.5"
         />
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 h-[38px] px-3 rounded-[8px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13px] text-[#111] font-mono placeholder-[#BBB] focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all"
+          className="flex-1 h-[42px] px-3 rounded-[8px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13px] text-[#111] font-mono placeholder-[#BBB] focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all"
           placeholder="#000000"
         />
       </div>
@@ -194,4 +204,4 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
   );
 }
 
-const inp = "w-full h-[40px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 transition-all";
+const inp = "w-full h-[42px] px-3.5 rounded-[10px] border border-[#E5E7EB] bg-[#FAFAFA] text-[13.5px] text-[#111] placeholder:text-[#CCC] focus:outline-none focus:border-[#0000B8] focus:ring-2 focus:ring-[#0000B8]/10 hover:border-[#D0D0D0] transition-all";

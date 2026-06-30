@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, useLayoutEffect } from "react";
+import { useRef, useState, useLayoutEffect, useEffect } from "react";
 import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
-import type { TestimonialItem } from "@/lib/content";
+import type { TestimonialItem, TestimonialsContent } from "@/lib/content";
 import { defaultTestimonials } from "@/lib/content";
+import { Editable, EditableImage, DragHandle, reorder, useSidebarActions } from "@/components/InlineEdit";
 
 function StarIcon() {
   return (
@@ -14,11 +15,28 @@ function StarIcon() {
   );
 }
 
-export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
-  const testimonials = data ?? defaultTestimonials;
+export default function Testimonials({ data, editing, onSave }: { data?: TestimonialsContent; editing?: boolean; onSave?: (data: unknown) => void }) {
+  const [content, setContent] = useState<TestimonialsContent>(data ?? { items: defaultTestimonials });
+  const [testimonials, setTestimonials] = useState(content.items);
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, 0.05);
   const [active, setActive] = useState(0);
+
+  useEffect(() => { if (data) { setContent(data); setTestimonials(data.items); } }, [data]);
+
+  const addTestimonial = () => {
+    setTestimonials((prev) => [...prev, { name: "New Reviewer", role: "Role", company: "Company", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100", accent: "#0000B8", rating: 5, quote: "Testimonial text here." }]);
+  };
+
+  useSidebarActions(
+    editing ? [{ type: 'add' as const, label: `Add Testimonial (${testimonials.length})`, onClick: addTestimonial }] : [],
+    [editing, testimonials.length]
+  );
+  useEffect(() => { if (editing && onSave) onSave({ ...content, items: testimonials }); }, [testimonials, content, editing, onSave]);
+
+  const updateActive = (field: keyof TestimonialItem, val: string) => {
+    setTestimonials((prev) => prev.map((t, i) => i === active ? { ...t, [field]: val } : t));
+  };
   const [enterFrom, setEnterFrom] = useState<"left" | "right" | null>(null);
 
   // Touch tracking
@@ -151,12 +169,12 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
           <div className={`mb-14 ${inView ? "animate-fade-up" : "opacity-0"}`}>
             <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] mb-4">
               <span className="w-8 h-px bg-[var(--color-text-tertiary)]" />
-              Client Testimonials
+              <Editable value={content.sectionLabel ?? "Client Testimonials"} onChange={(v) => setContent((prev) => ({ ...prev, sectionLabel: v }))} tag="span" editing={editing} />
             </span>
             <h2 className="font-[var(--font-display)] text-[clamp(30px,3.5vw,44px)] font-bold tracking-[-0.03em] leading-[1.1]">
-              Trusted by the
+              <Editable value={content.heading ?? "Trusted by the"} onChange={(v) => setContent((prev) => ({ ...prev, heading: v }))} tag="span" editing={editing} />
               <br />
-              <span className="text-[var(--color-text-tertiary)]">best in Gujarat.</span>
+              <Editable value={content.headingSub ?? "best in Gujarat."} onChange={(v) => setContent((prev) => ({ ...prev, headingSub: v }))} tag="span" className="text-[var(--color-text-tertiary)]" editing={editing} />
             </h2>
           </div>
 
@@ -198,21 +216,27 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
 
                   {/* Quote */}
                   <blockquote className="font-[var(--font-display)] text-[18px] max-sm:text-[16px] font-semibold tracking-[-0.02em] leading-[1.55] text-[var(--color-text-primary)] mb-8">
-                    &ldquo;{featured.quote}&rdquo;
+                    &ldquo;<Editable value={featured.quote} onChange={(v) => updateActive("quote", v)} tag="span" multiline editing={editing} />&rdquo;
                   </blockquote>
 
                   {/* Author */}
                   <div className="flex items-center gap-4 mt-auto">
-                    <div
+                    <EditableImage
+                      src={featured.photo}
+                      onChange={(v) => updateActive("photo", v)}
+                      editing={editing}
                       className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border-2"
-                      style={{ borderColor: featured.accent }}
                     >
-                      <Image src={featured.photo} alt={featured.name} fill className="object-cover" sizes="44px" />
-                    </div>
+                      <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border-2" style={{ borderColor: featured.accent }}>
+                        <Image src={featured.photo} alt={featured.name} fill className="object-cover" sizes="44px" />
+                      </div>
+                    </EditableImage>
                     <div>
-                      <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">{featured.name}</p>
+                      <Editable value={featured.name} onChange={(v) => updateActive("name", v)} tag="p" className="text-[14px] font-semibold text-[var(--color-text-primary)]" editing={editing} />
                       <p className="text-[12.5px] text-[var(--color-text-secondary)]">
-                        {featured.role} &middot; {featured.company}
+                        <Editable value={featured.role} onChange={(v) => updateActive("role", v)} tag="span" editing={editing} />
+                        {" · "}
+                        <Editable value={featured.company} onChange={(v) => updateActive("company", v)} tag="span" editing={editing} />
                       </p>
                     </div>
                   </div>
@@ -262,40 +286,51 @@ export default function Testimonials({ data }: { data?: TestimonialItem[] }) {
             {/* Selector list — desktop only */}
             <div className="hidden lg:flex flex-col gap-2.5">
               {testimonials.map((t, i) => (
-                <button
-                  key={t.name}
-                  onClick={() => {
-                    if (isAnimating.current || i === active) return;
-                    setEnterFrom(i > active ? "right" : "left");
-                    isAnimating.current = true;
-                    setActive(i);
-                  }}
-                  className={`w-full text-left px-5 py-4 rounded-[16px] border flex items-center gap-4
-                    transition-all duration-300 ease-[var(--ease)]
-                    ${active === i
-                      ? "bg-[var(--color-surface)] border-[var(--color-border-hover)] shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
-                      : "bg-transparent border-transparent hover:bg-[var(--color-surface)] hover:border-[var(--color-border)]"
-                    }`}
-                >
-                  <div
-                    className="relative w-9 h-9 rounded-full overflow-hidden shrink-0 transition-all duration-300"
-                    style={{ border: `2px solid ${active === i ? t.accent : "transparent"}` }}
+                <div key={t.name} className="flex items-center gap-1" data-drag-item>
+                  <DragHandle
+                    index={i}
+                    listId="testimonials"
+                    onReorder={(from, to) => {
+                      setTestimonials((prev) => reorder(prev, from, to));
+                      if (active === from) setActive(to);
+                      else if (active === to) setActive(from);
+                    }}
+                    editing={editing}
+                  />
+                  <button
+                    onClick={() => {
+                      if (isAnimating.current || i === active) return;
+                      setEnterFrom(i > active ? "right" : "left");
+                      isAnimating.current = true;
+                      setActive(i);
+                    }}
+                    className={`flex-1 text-left px-5 py-4 rounded-[16px] border flex items-center gap-4
+                      transition-all duration-300 ease-[var(--ease)]
+                      ${active === i
+                        ? "bg-[var(--color-surface)] border-[var(--color-border-hover)] shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
+                        : "bg-transparent border-transparent hover:bg-[var(--color-surface)] hover:border-[var(--color-border)]"
+                      }`}
                   >
-                    <Image src={t.photo} alt={t.name} fill className="object-cover" sizes="36px" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className={`text-[13px] font-semibold truncate transition-colors duration-300 ${active === i ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)]"}`}>
-                      {t.name}
-                    </p>
-                    <p className="text-[11.5px] text-[var(--color-text-tertiary)] truncate">{t.company}</p>
-                  </div>
-                  {active === i && (
                     <div
-                      className="ml-auto w-1.5 h-1.5 rounded-full shrink-0"
-                      style={{ background: t.accent }}
-                    />
-                  )}
-                </button>
+                      className="relative w-9 h-9 rounded-full overflow-hidden shrink-0 transition-all duration-300"
+                      style={{ border: `2px solid ${active === i ? t.accent : "transparent"}` }}
+                    >
+                      <Image src={t.photo} alt={t.name} fill className="object-cover" sizes="36px" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className={`text-[13px] font-semibold truncate transition-colors duration-300 ${active === i ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)]"}`}>
+                        {t.name}
+                      </p>
+                      <p className="text-[11.5px] text-[var(--color-text-tertiary)] truncate">{t.company}</p>
+                    </div>
+                    {active === i && (
+                      <div
+                        className="ml-auto w-1.5 h-1.5 rounded-full shrink-0"
+                        style={{ background: t.accent }}
+                      />
+                    )}
+                  </button>
+                </div>
               ))}
             </div>
           </div>

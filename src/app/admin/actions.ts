@@ -16,6 +16,7 @@ import {
   saveContactSubmission,
   getContactSubmissions,
 } from "@/lib/content";
+import { redis } from "@/lib/redis";
 import { getBlogPosts } from "@/lib/content";
 import type { BlogPost } from "@/lib/blog";
 import { sendContactEmail } from "@/lib/email";
@@ -104,14 +105,20 @@ export async function saveContactDataAction(content: ContactContent) {
 
 export async function saveServicesAction(data: ServiceItem[]) {
   await requireAdmin();
-  await saveContent("site:services", data);
+  // Wrap in ServicesContent to preserve existing header fields
+  const existing = await redis.get<Record<string, unknown>>("site:services").catch(() => null);
+  const wrapper = (existing && !Array.isArray(existing)) ? { ...existing, items: data } : { items: data };
+  await saveContent("site:services", wrapper);
 }
 
 /* ── Testimonials ─────────────────────────────────────────────── */
 
 export async function saveTestimonialsAction(data: TestimonialItem[]) {
   await requireAdmin();
-  await saveContent("site:testimonials", data);
+  // Wrap in TestimonialsContent to preserve existing header fields
+  const existing = await redis.get<Record<string, unknown>>("site:testimonials").catch(() => null);
+  const wrapper = (existing && !Array.isArray(existing)) ? { ...existing, items: data } : { items: data };
+  await saveContent("site:testimonials", wrapper);
 }
 
 /* ── Trust ───────────────────────────────────────────────────── */
@@ -214,4 +221,22 @@ export async function deleteContactSubmissionAction(id: string) {
     "contact:submissions",
     submissions.filter((s) => s.id !== id)
   );
+}
+
+/* ── Reset keys to defaults (forces new content to take effect) ── */
+
+export async function resetNavbarToDefaultAction() {
+  await requireAdmin();
+  await redis.del("site:navbar");
+}
+
+export async function resetProductsToDefaultAction() {
+  await requireAdmin();
+  await redis.del("site:products");
+}
+
+export async function resetNavbarAndProductsAction() {
+  await requireAdmin();
+  await redis.del("site:navbar");
+  await redis.del("site:products");
 }

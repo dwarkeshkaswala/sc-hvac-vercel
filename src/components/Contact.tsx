@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { ContactContent } from "@/lib/content";
 import { defaultContact } from "@/lib/content";
 import { submitContactFormAction } from "@/app/admin/actions";
+import { Editable } from "@/components/InlineEdit";
 
 const serviceOptions = [
   "New Installation",
@@ -14,14 +15,19 @@ const serviceOptions = [
   "Parts / Supply",
 ];
 
-export default function Contact({ data }: { data?: ContactContent }) {
-  const d = data ?? defaultContact;
+export default function Contact({ data, editing, onSave }: { data?: ContactContent; editing?: boolean; onSave?: (data: unknown) => void }) {
+  const [d, setD] = useState(data ?? defaultContact);
+
+  useEffect(() => { if (data) setD(data); }, [data]);
+  useEffect(() => { if (editing && onSave) onSave(d); }, [d, editing, onSave]);
+
+  const set = (k: keyof ContactContent, v: string) => setD((prev) => ({ ...prev, [k]: v }));
 
   const [formState, setFormState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
-  const details = [
+  const details: { icon: React.ReactNode; label: string; value: string; field: keyof ContactContent; multiline?: boolean }[] = [
     {
       icon: (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -30,6 +36,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
       ),
       label: "Phone",
       value: d.phone,
+      field: "phone",
     },
     {
       icon: (
@@ -39,6 +46,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
       ),
       label: "Email",
       value: d.email,
+      field: "email",
     },
     {
       icon: (
@@ -48,6 +56,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
       ),
       label: "Location",
       value: d.address,
+      field: "address",
       multiline: true,
     },
     {
@@ -58,6 +67,7 @@ export default function Contact({ data }: { data?: ContactContent }) {
       ),
       label: "Working Hours",
       value: d.hours,
+      field: "hours",
     },
   ];
 
@@ -76,33 +86,44 @@ export default function Contact({ data }: { data?: ContactContent }) {
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left — Info */}
             <div className="p-14 max-md:p-8 flex flex-col justify-center">
-              <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] block mb-4">
-                Get in touch
-              </span>
+              <Editable
+                value={d.sectionLabel ?? "Get in touch"}
+                onChange={(v) => set("sectionLabel" as keyof ContactContent, v)}
+                tag="span"
+                className="text-[11px] font-medium tracking-[0.08em] uppercase text-[var(--color-text-tertiary)] block mb-4"
+                editing={editing}
+              />
               <h2 className="font-[var(--font-display)] text-[clamp(26px,3vw,34px)] font-bold tracking-[-0.025em] mb-3">
-                Let&apos;s solve your
-                <br />
-                climate challenge.
+                <Editable
+                  value={d.heading ?? "Let's solve your\nclimate challenge."}
+                  onChange={(v) => set("heading" as keyof ContactContent, v)}
+                  tag="span"
+                  multiline
+                  editing={editing}
+                />
               </h2>
               <p className="text-sm text-[var(--color-text-secondary)] leading-[1.7] mb-10">
                 Whether it&apos;s a new installation, repair, or consultation — we respond within 2 hours during business days.
               </p>
 
               <div className="flex flex-col gap-6">
-                {details.map((d) => (
-                  <div key={d.label} className="flex items-start gap-3.5">
+                {details.map((item) => (
+                  <div key={item.label} className="flex items-start gap-3.5">
                     <div className="w-9 h-9 rounded-[6px] bg-[var(--color-surface-raised)] flex items-center justify-center shrink-0 text-[var(--color-text-secondary)]">
-                      {d.icon}
+                      {item.icon}
                     </div>
                     <div>
                       <span className="block text-[11px] text-[var(--color-text-tertiary)] uppercase tracking-[0.06em] mb-0.5">
-                        {d.label}
+                        {item.label}
                       </span>
-                      {d.multiline ? (
-                        <p className="text-sm text-[var(--color-text-primary)] font-medium whitespace-pre-line">{d.value}</p>
-                      ) : (
-                        <p className="text-sm text-[var(--color-text-primary)] font-medium">{d.value}</p>
-                      )}
+                      <Editable
+                        value={item.value}
+                        onChange={(v) => set(item.field, v)}
+                        tag="p"
+                        className={`text-sm text-[var(--color-text-primary)] font-medium${item.multiline ? " whitespace-pre-line" : ""}`}
+                        multiline={item.multiline}
+                        editing={editing}
+                      />
                     </div>
                   </div>
                 ))}

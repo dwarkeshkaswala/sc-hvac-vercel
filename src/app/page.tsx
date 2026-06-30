@@ -10,6 +10,8 @@ import Trust from "@/components/Trust";
 import Brands from "@/components/Brands";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { InlineEditProvider, EditableSection } from "@/components/InlineEdit";
+import { getAdminSession } from "@/lib/auth";
 import {
   getHeroContent,
   getServicesContent,
@@ -18,10 +20,12 @@ import {
   getContactContent,
   getDealersContent,
   getNavbarContent,
+  getPortfolioContent,
+  getProductsContent,
 } from "@/lib/content";
 
 export default async function Home() {
-  const [hero, services, testimonials, trust, contact, dealers, navbar] = await Promise.all([
+  const [hero, services, testimonials, trust, contact, dealers, navbar, portfolio, products, session] = await Promise.all([
     getHeroContent(),
     getServicesContent(),
     getTestimonialsContent(),
@@ -29,22 +33,43 @@ export default async function Home() {
     getContactContent(),
     getDealersContent(),
     getNavbarContent(),
+    getPortfolioContent(),
+    getProductsContent(),
+    getAdminSession(),
   ]);
 
+  const isAdmin = !!session;
+
   return (
-    <>
+    <InlineEditProvider isAdmin={isAdmin}>
       <Navbar data={navbar} />
       <main>
-        <Hero data={hero} />
-        <Services data={services} />
-        <Products />
-        <AuthorizedDealers data={dealers} />
-        <Portfolio />
-        <Testimonials data={testimonials} />
+        <EditableSection sectionId="hero" label="Hero" contentKey="site:hero">
+          <Hero data={hero} />
+        </EditableSection>
+        <EditableSection sectionId="services" label="Services" contentKey="site:services">
+          <Services data={services} />
+        </EditableSection>
+        <EditableSection sectionId="products" label="Products" contentKey="site:products">
+          <Products data={products} />
+        </EditableSection>
+        <EditableSection sectionId="dealers" label="Dealers" contentKey="site:dealers">
+          <AuthorizedDealers data={dealers} />
+        </EditableSection>
+        <EditableSection sectionId="portfolio" label="Portfolio" contentKey="site:portfolio">
+          <Portfolio data={portfolio} />
+        </EditableSection>
+        <EditableSection sectionId="testimonials" label="Testimonials" contentKey="site:testimonials">
+          <Testimonials data={testimonials} />
+        </EditableSection>
         <Blog />
-        <Trust data={trust} />
+        <EditableSection sectionId="trust" label="Trust" contentKey="site:trust">
+          <Trust data={trust} />
+        </EditableSection>
         <Brands />
-        <Contact data={contact} />
+        <EditableSection sectionId="contact" label="Contact" contentKey="site:contact">
+          <Contact data={contact} />
+        </EditableSection>
       </main>
       <Footer />
 
@@ -64,6 +89,6 @@ export default async function Home() {
           <path d="M16 0C7.164 0 0 7.163 0 16c0 2.822.737 5.469 2.027 7.77L0 32l8.469-2.002A15.93 15.93 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 0 1-6.771-1.854l-.486-.289-4.99 1.18 1.243-4.836-.317-.497A13.26 13.26 0 0 1 2.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.274-9.878c-.398-.199-2.355-1.162-2.72-1.295-.366-.133-.632-.199-.898.2-.265.398-1.029 1.295-1.261 1.561-.232.265-.465.298-.863.1-.398-.2-1.681-.62-3.202-1.977-1.183-1.056-1.982-2.36-2.214-2.758-.232-.398-.025-.613.175-.812.179-.178.398-.465.597-.698.2-.232.266-.398.399-.664.133-.265.066-.497-.033-.697-.1-.199-.898-2.165-1.23-2.963-.325-.778-.655-.672-.898-.685l-.765-.013c-.266 0-.697.1-1.063.497-.365.398-1.394 1.362-1.394 3.321 0 1.96 1.427 3.854 1.626 4.12.2.265 2.807 4.286 6.803 6.01.95.41 1.692.655 2.27.839.954.304 1.822.261 2.508.158.765-.114 2.355-.963 2.688-1.893.332-.93.332-1.727.232-1.893-.1-.166-.365-.265-.763-.464z"/>
         </svg>
       </a>
-    </>
+    </InlineEditProvider>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { HeroContent } from "@/lib/content";
 import { defaultHero } from "@/lib/content";
+import { Editable, EditableImage } from "@/components/InlineEdit";
 
 const avatars = [
   { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&q=75", alt: "Rajesh M." },
@@ -13,9 +15,25 @@ const avatars = [
   { src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=64&q=75", alt: "Suresh J." },
 ];
 
-export default function Hero({ data }: { data?: HeroContent }) {
-  const d = data ?? defaultHero;
+export default function Hero({ data, editing, onSave }: { data?: HeroContent; editing?: boolean; onSave?: (data: unknown) => void }) {
+  const [d, setD] = useState(data ?? defaultHero);
   const stats = d.stats;
+
+  // Reset state if data changes
+  useEffect(() => { if (data) setD(data); }, [data]);
+
+  // Report changes to parent whenever state changes during editing
+  const update = useCallback(<K extends keyof HeroContent>(key: K, value: HeroContent[K]) => {
+    setD((prev) => {
+      const next = { ...prev, [key]: value };
+      return next;
+    });
+  }, []);
+
+  // Push data up on every change
+  useEffect(() => {
+    if (editing && onSave) onSave(d);
+  }, [d, editing, onSave]);
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden bg-[var(--color-bg)]">
       {/* ── Main content ─────────────────────────────── */}
@@ -33,23 +51,28 @@ export default function Hero({ data }: { data?: HeroContent }) {
               <span className="absolute inset-0 rounded-full bg-green-500 animate-[ping_2s_ease-out_infinite] opacity-60" />
               <span className="relative w-2 h-2 rounded-full bg-green-500" />
             </span>
-            {d.badge}
+            <Editable value={d.badge} onChange={(v) => update("badge", v)} tag="span" editing={editing} />
           </div>
 
           {/* Headline */}
           <h1 className="font-[var(--font-display)] font-extrabold leading-[1.0] tracking-[-0.035em]
                          text-[clamp(42px,6vw,76px)] mb-6 animate-fade-up delay-1">
-            {d.line1}
+            <Editable value={d.line1} onChange={(v) => update("line1", v)} tag="span" editing={editing} />
             <br />
-            <span className="text-[var(--color-text-tertiary)]">{d.line2}</span>
+            <Editable value={d.line2} onChange={(v) => update("line2", v)} tag="span" className="text-[var(--color-text-tertiary)]" editing={editing} />
             <br />
-            {d.line3}
+            <Editable value={d.line3} onChange={(v) => update("line3", v)} tag="span" editing={editing} />
           </h1>
 
           {/* Sub */}
-          <p className="text-[15px] text-[var(--color-text-secondary)] leading-[1.75] max-w-[420px] mb-10 animate-fade-up delay-2">
-            {d.subheadline}
-          </p>
+          <Editable
+            value={d.subheadline}
+            onChange={(v) => update("subheadline", v)}
+            tag="p"
+            className="text-[15px] text-[var(--color-text-secondary)] leading-[1.75] max-w-[420px] mb-10 animate-fade-up delay-2"
+            multiline
+            editing={editing}
+          />
 
           {/* CTAs */}
           <div className="flex flex-wrap gap-3 mb-12 animate-fade-up delay-3">
@@ -76,7 +99,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              {d.phone}
+              <Editable value={d.phone} onChange={(v) => update("phone", v)} tag="span" editing={editing} />
             </a>
             <a
               href="https://wa.me/919054190245?text=Hi%2C%20I%27m%20interested%20in%20Shreeji%20HVAC%20services"
@@ -122,16 +145,22 @@ export default function Hero({ data }: { data?: HeroContent }) {
         <div className="relative hidden lg:block animate-fade-up delay-2">
 
           {/* Main tall image */}
-          <div className="relative h-[580px] rounded-[28px] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.13)]">
-            <Image
-              src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=900&q=80"
-              alt="Commercial HVAC Installation"
-              fill
-              priority
-              sizes="480px"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          <EditableImage
+            src={d.heroImage ?? "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=900&q=80"}
+            onChange={(v) => update("heroImage" as keyof HeroContent, v)}
+            editing={editing}
+            className="relative h-[580px] rounded-[28px] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.13)]"
+          >
+            <div className="relative h-[580px] rounded-[28px] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.13)]">
+              <Image
+                src={d.heroImage ?? "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=900&q=80"}
+                alt="Commercial HVAC Installation"
+                fill
+                priority
+                sizes="480px"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
             {/* Overlay label */}
             <div className="absolute bottom-6 left-6 right-6">
@@ -141,6 +170,7 @@ export default function Hero({ data }: { data?: HeroContent }) {
               </div>
             </div>
           </div>
+          </EditableImage>
 
           {/* Floating badge — top left */}
           <div className="absolute -top-4 -left-6 bg-[var(--color-surface)] border border-[var(--color-border)]
@@ -196,16 +226,34 @@ export default function Hero({ data }: { data?: HeroContent }) {
       <div className="max-w-[1200px] w-full mx-auto px-6 pb-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--color-border)] rounded-[20px] overflow-hidden
                         border border-[var(--color-border)] animate-fade-up delay-5">
-          {stats.map((s) => (
+          {stats.map((s, i) => (
             <div
-              key={s.value}
+              key={i}
               className="bg-[var(--color-surface)] px-7 py-6 flex flex-col gap-1
                          transition-colors duration-300 hover:bg-[var(--color-surface-raised)]"
             >
-              <span className="font-[var(--font-display)] text-[30px] font-extrabold tracking-[-0.035em] text-[var(--color-text-primary)]">
-                {s.value}
-              </span>
-              <span className="text-[12.5px] text-[var(--color-text-tertiary)]">{s.label}</span>
+              <Editable
+                value={s.value}
+                onChange={(v) => {
+                  const next = [...stats];
+                  next[i] = { ...next[i], value: v };
+                  update("stats", next);
+                }}
+                tag="span"
+                className="font-[var(--font-display)] text-[30px] font-extrabold tracking-[-0.035em] text-[var(--color-text-primary)]"
+                editing={editing}
+              />
+              <Editable
+                value={s.label}
+                onChange={(v) => {
+                  const next = [...stats];
+                  next[i] = { ...next[i], label: v };
+                  update("stats", next);
+                }}
+                tag="span"
+                className="text-[12.5px] text-[var(--color-text-tertiary)]"
+                editing={editing}
+              />
             </div>
           ))}
         </div>
